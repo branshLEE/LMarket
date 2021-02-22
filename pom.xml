@@ -16,6 +16,9 @@
 		<module>lmarket-order</module>
 		<module>lmarket-member</module>
 		<module>lmarket-coupon</module>
+		<module>renren-fast</module>
+		<module>renren-generator</module>
+		<module>lmarket-common</module>
 	</modules>
 
 
