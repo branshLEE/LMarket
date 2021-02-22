@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.ProductAttrValueEntity;
 import com.lmarket.product.service.ProductAttrValueService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

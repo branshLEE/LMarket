@@ -3,6 +3,7 @@ package com.lmarket.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.common.utils.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.CommentReplayEntity;
 import com.lmarket.product.service.CommentReplayService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

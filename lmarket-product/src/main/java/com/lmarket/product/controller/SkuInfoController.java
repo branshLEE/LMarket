@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.SkuInfoEntity;
 import com.lmarket.product.service.SkuInfoService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**
