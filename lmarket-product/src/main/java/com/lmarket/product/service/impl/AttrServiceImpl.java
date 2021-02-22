@@ -1,5 +1,7 @@
 package com.lmarket.product.service.impl;
 
+import com.common.utils.PageUtils;
+import com.common.utils.Query;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
