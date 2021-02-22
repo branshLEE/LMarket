@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.BrandEntity;
 import com.lmarket.product.service.BrandService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

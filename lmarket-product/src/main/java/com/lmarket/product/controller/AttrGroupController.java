@@ -3,7 +3,8 @@ package com.lmarket.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.common.utils.PageUtils;
+import com.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.AttrGroupEntity;
 import com.lmarket.product.service.AttrGroupService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

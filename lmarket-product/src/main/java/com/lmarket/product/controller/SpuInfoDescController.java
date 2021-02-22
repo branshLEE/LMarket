@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.SpuInfoDescEntity;
 import com.lmarket.product.service.SpuInfoDescService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

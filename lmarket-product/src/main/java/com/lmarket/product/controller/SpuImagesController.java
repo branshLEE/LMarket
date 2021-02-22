@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.SpuImagesEntity;
 import com.lmarket.product.service.SpuImagesService;
-import com.common.utils.PageUtils;
-import com.common.utils.R;
-
 
 
 /**

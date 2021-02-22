@@ -1,7 +1,6 @@
 package com.lmarket.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.common.utils.PageUtils;
 import com.lmarket.product.entity.SpuInfoEntity;
 
 import java.util.Map;
