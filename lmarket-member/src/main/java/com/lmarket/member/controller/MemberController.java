@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,8 @@ import com.common.utils.R;
  * @email branshLEE@gmail.com
  * @date 2021-02-22 23:40:43
  */
+
+@RefreshScope
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
@@ -33,6 +37,17 @@ public class MemberController {
     /**
      * 列表
      */
+
+    @Value("${member.name}")
+    private String name;
+    @Value("${member.age}")
+    private Integer age;
+
+    @RequestMapping("/test")
+    public R test(){
+        return R.ok().put("name", name).put("age", age);
+    }
+
     @RequestMapping("/list")
     //@RequiresPermissions("member:member:list")
     public R list(@RequestParam Map<String, Object> params){
