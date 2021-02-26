@@ -13,6 +13,7 @@
         <module name="lmarket-order" />
         <module name="lmarket-product" />
         <module name="lmarket-coupon" />
+        <module name="lmarket-gateway" />
         <module name="renren-generator" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
       <module name="lmarket" target="1.5" />
       <module name="lmarket-common" target="15" />
       <module name="lmarket-coupon" target="1.8" />
+      <module name="lmarket-gateway" target="11" />
       <module name="lmarket-member" target="11" />
       <module name="lmarket-order" target="11" />
       <module name="lmarket-product" target="11" />
@@ -31,6 +33,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="lmarket-coupon" options="-parameters" />
+      <module name="lmarket-gateway" options="-parameters" />
       <module name="lmarket-member" options="-parameters" />
       <module name="lmarket-order" options="-parameters" />
       <module name="lmarket-product" options="-parameters" />
