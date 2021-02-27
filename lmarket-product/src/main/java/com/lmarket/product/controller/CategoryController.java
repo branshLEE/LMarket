@@ -1,18 +1,17 @@
 package com.lmarket.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lmarket.product.entity.CategoryEntity;
 import com.lmarket.product.service.CategoryService;
-import com.common.utils.PageUtils;
 import com.common.utils.R;
 
 
@@ -33,12 +32,13 @@ public class CategoryController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @RequestMapping("/list/tree")
     //@RequiresPermissions("product:category:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryService.queryPage(params);
+    public R list(){
 
-        return R.ok().put("page", page);
+        List<CategoryEntity> entities = categoryService.listWithTree();
+
+        return R.ok().put("data", entities);
     }
 
 
