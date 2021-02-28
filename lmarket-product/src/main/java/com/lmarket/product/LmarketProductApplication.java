@@ -3,6 +3,7 @@ package com.lmarket.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 1、整合Mybatis-plus
@@ -21,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *  		1）使用MapperScan
  *  		2）告诉Mybatis-plus, sql配置文件位置
  */
+@EnableDiscoveryClient
 @MapperScan("com.lmarket.product.dao")
 @SpringBootApplication
 public class LmarketProductApplication {
