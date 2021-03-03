@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="lmarket-ware" />
         <module name="lmarket-common" />
+        <module name="lmarket-third-party" />
         <module name="lmarket-member" />
         <module name="renren-fast" />
         <module name="lmarket-order" />
@@ -25,6 +26,7 @@
       <module name="lmarket-member" target="11" />
       <module name="lmarket-order" target="11" />
       <module name="lmarket-product" target="11" />
+      <module name="lmarket-third-party" target="11" />
       <module name="lmarket-ware" target="11" />
       <module name="renren-fast" target="1.8" />
       <module name="renren-generator" target="1.8" />
@@ -37,6 +39,7 @@
       <module name="lmarket-member" options="-parameters" />
       <module name="lmarket-order" options="-parameters" />
       <module name="lmarket-product" options="-parameters" />
+      <module name="lmarket-third-party" options="-parameters" />
       <module name="lmarket-ware" options="-parameters" />
       <module name="renren-fast" options="-parameters" />
       <module name="renren-generator" options="-parameters" />

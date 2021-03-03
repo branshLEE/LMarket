@@ -1,5 +1,5 @@
 package com.lmarket.product;
-
+//
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lmarket.product.entity.BrandEntity;
 import com.lmarket.product.service.BrandService;
@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 @SpringBootTest
@@ -14,6 +17,8 @@ class LmarketProductApplicationTests {
 
 	@Autowired
 	BrandService brandService;
+//
+
 
 	@Test
 	void contextLoads() {
