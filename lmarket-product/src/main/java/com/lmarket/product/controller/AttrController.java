@@ -3,6 +3,7 @@ package com.lmarket.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.lmarket.product.vo.AttrGroupRelationVo;
 import com.lmarket.product.vo.AttrRespVo;
 import com.lmarket.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
