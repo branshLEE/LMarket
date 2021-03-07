@@ -8,6 +8,7 @@ import com.lmarket.product.dao.CategoryDao;
 import com.lmarket.product.entity.AttrAttrgroupRelationEntity;
 import com.lmarket.product.entity.AttrGroupEntity;
 import com.lmarket.product.entity.CategoryEntity;
+import com.lmarket.product.service.CategoryService;
 import com.lmarket.product.vo.AttrRespVo;
 import com.lmarket.product.vo.AttrVo;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +42,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     @Autowired
     CategoryDao categoryDao;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -114,6 +118,37 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
         pageUtils.setList(respVos);
         return pageUtils;
+    }
+
+    @Override
+    public AttrRespVo getAttrInfo(Long attrId) {
+
+        AttrRespVo respVo = new AttrRespVo();
+        AttrEntity attrEntity = this.getById(attrId);
+        BeanUtils.copyProperties(attrEntity, respVo);
+
+        //1、设置分组信息
+        AttrAttrgroupRelationEntity attrgroupRelation = relationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrId));
+        if(attrgroupRelation != null){
+            respVo.setAttrGroupId(attrgroupRelation.getAttrGroupId());
+
+            AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupRelation.getAttrGroupId());
+            if(attrGroupEntity != null){
+                respVo.setGroupName(attrGroupEntity.getAttrGroupName());
+            }
+
+        }
+
+        //2、设置分类信息
+        Long catelogId = attrEntity.getCatelogId();
+        Long[] catelogPath = categoryService.findCatelogPath(catelogId);
+        respVo.setCatelogPath(catelogPath);
+        CategoryEntity categoryEntity = categoryDao.selectById(catelogId);
+        if(categoryEntity != null){
+            respVo.setCatelogName(categoryEntity.getName());
+        }
+
+        return respVo;
     }
 
 }
