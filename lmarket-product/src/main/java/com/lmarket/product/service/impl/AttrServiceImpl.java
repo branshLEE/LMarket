@@ -70,11 +70,15 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         //1、保存基本数据
         this.save(attrEntity);
         //2、保存关联关系
+        //2.1、当attr_type为1时，才保存到属性分组
         if(attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
             AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
             relationEntity.setAttrGroupId(attr.getAttrGroupId());
             relationEntity.setAttrId(attrEntity.getAttrId());
-            relationDao.insert(relationEntity);
+            //当属性分组选项不为空时，才插入到pms_attr_attrgroup_relation
+            if(relationEntity.getAttrGroupId() != null){
+                relationDao.insert(relationEntity);
+            }
         }
 
     }
@@ -236,7 +240,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         //2、当前分组只能关联别的分组的没有引用的属性
         //2.1、当前分类下的其他分组
         List<AttrGroupEntity> group = attrGroupDao.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id",
-                catelogId).ne("attr_group_id", attrgroupId));
+                catelogId));
         List<Long> collect = group.stream().map(item->{
             return item.getAttrGroupId();
         }).collect(Collectors.toList());
@@ -253,7 +257,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             wrapper.notIn("attr_id", attrIds);
         }
         String key = (String) params.get("key");
-        if(StringUtils.isEmpty(key)){
+        if(!StringUtils.isEmpty(key)){
             wrapper.and((w)->{
                 w.eq("attr_id", key).or().like("attr_name", key);
             });
