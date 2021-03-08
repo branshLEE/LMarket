@@ -19,6 +19,10 @@ public class AttrVo {
     /**
      *
      */
+    private Integer valueType;
+    /**
+     *
+     */
     private String icon;
     /**
      *
