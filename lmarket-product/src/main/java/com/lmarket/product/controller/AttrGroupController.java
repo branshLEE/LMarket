@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.lmarket.product.entity.AttrEntity;
+import com.lmarket.product.service.AttrAttrgroupRelationService;
 import com.lmarket.product.service.AttrService;
 import com.lmarket.product.service.CategoryService;
 import com.lmarket.product.vo.AttrGroupRelationVo;
@@ -36,6 +37,16 @@ public class AttrGroupController {
 
     @Autowired
     AttrService attrService;
+
+    @Autowired
+    AttrAttrgroupRelationService relationService;
+
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
 
     @GetMapping("/{attrgroupId}/attr/relation")
     public R AttrRelation(@PathVariable("attrgroupId") Long attrgroupId){
