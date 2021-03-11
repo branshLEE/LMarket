@@ -40,7 +40,7 @@ public class SkuInfoEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Long catalogId;
+	private Long catelogId;
 	/**
 	 * Ʒ
 	 */
