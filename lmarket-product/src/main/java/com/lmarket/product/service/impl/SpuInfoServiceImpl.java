@@ -2,6 +2,7 @@ package com.lmarket.product.service.impl;
 
 import com.common.to.SkuReductionTo;
 import com.common.to.SpuBoundTo;
+import com.common.to.es.SkuEsMode;
 import com.common.utils.PageUtils;
 import com.common.utils.Query;
 import com.common.utils.R;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     CouponFeignService couponFeignService;
+
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -219,6 +227,41 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void up(Long spuId) {
+
+        //1、组装需要的数据
+
+        //1.1查出当前spuid对应的所有sku信息，品牌的名字
+        List<SkuInfoEntity> skus = skuInfoService.getSkusBySpuId(spuId);
+
+        //TODO 4、查询当前sku的所有可以被用来检索的规格属性
+
+        //1.2、封装每个sku的信息
+        List<SkuEsMode> uoProducts = skus.stream().map(sku -> {
+            SkuEsMode esMode = new SkuEsMode();
+            BeanUtils.copyProperties(sku, esMode);
+
+            esMode.setSkuPrice(sku.getPrice());
+            esMode.setSkuImg(sku.getSkuDefaultImg());
+
+            //TODO 1、发送远程调用，库存系统查询是否有库存
+
+            //TODO 2、热度评分 默认0
+
+            //TODO 3、查询品牌和分类的名字信息
+            BrandEntity brand = brandService.getById(esMode.getBrandId());
+            esMode.setBrandName(brand.getName());
+            esMode.setBrandImg(brand.getLogo());
+
+            CategoryEntity category = categoryService.getById(esMode.getCatelogId());
+            esMode.setCatelogName(category.getName());
+
+            return esMode;
+        }).collect(Collectors.toList());
+
     }
 
 }
