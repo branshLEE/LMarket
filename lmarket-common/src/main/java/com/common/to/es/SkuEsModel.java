@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class SkuEsMode {
+public class SkuEsModel {
 
     private Long skuId;
 
