@@ -46,3 +46,8 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+        - id: lmarket_host_route
+          uri: lb://lmarket-product
+          predicates:
+            - Host=**.lmarket.com
