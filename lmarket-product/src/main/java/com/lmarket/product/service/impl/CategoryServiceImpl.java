@@ -6,6 +6,8 @@ import com.common.utils.PageUtils;
 import com.common.utils.Query;
 import com.lmarket.product.service.CategoryBrandRelationService;
 import com.lmarket.product.vo.Catelog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -38,6 +40,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    RedissonClient redisson;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryEntity> page = this.page(
@@ -56,11 +61,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //2.1、找到所有的一级分类
         List<CategoryEntity> level1Menus = entities.stream().filter((categoryEntity) -> {
             return categoryEntity.getParentCid() == 0;
-        }).map((menu)->{
+        }).map((menu) -> {
             menu.setChildren(getChildrens(menu, entities));
             return menu;
-        }).sorted((menu1, menu2)->{
-            return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
+        }).sorted((menu1, menu2) -> {
+            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
         }).collect(Collectors.toList());
 
 
@@ -83,11 +88,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
     }
 
-    private List<Long> findParentPath(Long catelogId, List<Long> paths){
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
         //1、收集当前节点id
         paths.add(catelogId);
         CategoryEntity byId = this.getById(catelogId);
-        if(byId.getParentCid() != 0){
+        if (byId.getParentCid() != 0) {
             findParentPath(byId.getParentCid(), paths);
         }
         return paths;
@@ -95,6 +100,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 级联更新所有关联的数据
+     *
      * @param category
      */
     @Transactional
@@ -128,7 +134,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //1、加入缓存逻辑,缓存中存的数据是json字符串
         //JSON的好处是跨语言跨平台兼容
         String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
-        if(StringUtils.isEmpty(catelogJSON)){
+        if (StringUtils.isEmpty(catelogJSON)) {
             //2、缓存中没有数据,则查询数据库
             Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDbWithRedisLock();
 
@@ -141,19 +147,39 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return result;
     }
 
+    /**
+     * 缓存里的数据需要和数据库的保持一致（缓存数据一致性）
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatelogJsonFromDbWithRedissonLock() {
+        //1、锁的名字，粒度越细,则越快越好
+        //锁的粒度：具体缓存的是某个数据
+        RLock lock = redisson.getLock("CatelogJson-Lock");
+        lock.lock();
+
+        Map<String, List<Catelog2Vo>> dataFromDb;
+        try {
+            dataFromDb = getDataFromDb();
+        } finally {
+            lock.unlock();
+        }
+
+        return dataFromDb;
+    }
+
     public Map<String, List<Catelog2Vo>> getCatelogJsonFromDbWithRedisLock() {
         //1、占分布式锁，去redis占坑
         String uuid = UUID.randomUUID().toString();
 
         Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", "111", 300, TimeUnit.SECONDS);
-        if(lock){
+        if (lock) {
             System.out.println("获取分布式锁成功...");
             //加锁成功...执行进数据库业务
             //redisTemplate.expire("lock", 30, TimeUnit.SECONDS); //2、设置锁的过期时间(必须和加锁是同步的，一个原子操作)
             Map<String, List<Catelog2Vo>> dataFromDb;
-            try{
+            try {
                 dataFromDb = getDataFromDb();
-            }finally {
+            } finally {
                 //Lua脚本
                 String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
                 //删除锁（原子性）
@@ -168,13 +194,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 
             return dataFromDb;
-        }else {
+        } else {
             //加锁失败，重试。类似本地锁synchronized()
             //休眠100ms再重试
             System.out.println("获取分布式锁失败...等待重试");
             try {
                 Thread.sleep(200);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
             return getCatelogJsonFromDbWithRedisLock(); //自旋
@@ -241,7 +267,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //加本地锁
     public Map<String, List<Catelog2Vo>> getCatelogJsonFromDbWithLocalLock() {
 
-        synchronized (this){
+        synchronized (this) {
             return getDataFromDb();
         }
     }
@@ -254,7 +280,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 
     //递归查找所有菜单的子菜单
-    private List<CategoryEntity> getChildrens(CategoryEntity root, List<CategoryEntity> all){
+    private List<CategoryEntity> getChildrens(CategoryEntity root, List<CategoryEntity> all) {
 
         List<CategoryEntity> children = all.stream().filter(categoryEntity -> {
             return categoryEntity.getParentCid() == root.getCatId();
@@ -262,9 +288,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             //1、找子菜单
             categoryEntity.setChildren(getChildrens(categoryEntity, all));
             return categoryEntity;
-        }).sorted((menu1, menu2)->{
+        }).sorted((menu1, menu2) -> {
             //2、菜单的排序
-            return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
+            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
         }).collect(Collectors.toList());
 
 
