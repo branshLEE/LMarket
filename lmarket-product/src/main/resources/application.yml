@@ -22,8 +22,8 @@
 #    db-config:
 #      id-type: auto
 #
-server:
-  port: 40000
+#server:
+#  port: 40000
 #
 #logging:
 #  level:

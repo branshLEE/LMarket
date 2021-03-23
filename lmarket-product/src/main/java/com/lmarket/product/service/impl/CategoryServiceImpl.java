@@ -9,6 +9,7 @@ import com.lmarket.product.vo.Catelog2Vo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     }
 
+    //每一个需要缓存的数据都指定要放入那个名字的缓存（缓存分区（按业务类型分区））
+    @Cacheable(value = {"category"}, key = "#root.method.name") //代表当前方法的结果需要缓存，如果缓存中有，方法不用调用，否则调用方法，最后将方法的结果放入缓存
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
 
