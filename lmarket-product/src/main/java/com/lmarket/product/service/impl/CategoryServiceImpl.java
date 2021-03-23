@@ -9,6 +9,7 @@ import com.lmarket.product.vo.Catelog2Vo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -104,6 +105,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *
      * @param category
      */
+    @CacheEvict(value = "category", allEntries = true) //失效模式
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -113,7 +115,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     //每一个需要缓存的数据都指定要放入那个名字的缓存（缓存分区（按业务类型分区））
-    @Cacheable(value = {"category"}, key = "#root.method.name") //代表当前方法的结果需要缓存，如果缓存中有，方法不用调用，否则调用方法，最后将方法的结果放入缓存
+    @Cacheable(value = "category", key = "#root.method.name") //代表当前方法的结果需要缓存，如果缓存中有，方法不用调用，否则调用方法，最后将方法的结果放入缓存
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
 
@@ -121,11 +123,53 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return categoryEntities;
     }
 
-    // 产生堆外内存溢出：OutOfDirectMemoryError (lettuce版本升级到5.1.8以上解决，或者更换jedis客户端)
 
-
+    @Cacheable(value = "category", key = "#root.method.name")
     @Override
     public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        System.out.println("查询了数据库....");
+
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+
+
+        //1、查出所有一级分类
+        List<CategoryEntity> level1Categorys = getParent_cid(selectList, 0L);
+
+        //2、封装数据
+        Map<String, List<Catelog2Vo>> parent_cid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            //1、拿到每一个的一级分类，查到这个一级分类的所有二级分类
+            List<CategoryEntity> categoryEntities = getParent_cid(selectList, v.getCatId());
+            //2、封装上面的结果
+            List<Catelog2Vo> catelog2Vos = null;
+            if (categoryEntities != null) {
+                catelog2Vos = categoryEntities.stream().map(l2 -> {
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                    //1、找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> level3Catelog = getParent_cid(selectList, l2.getCatId());
+                    if (level3Catelog != null) {
+                        List<Catelog2Vo.Catelog3Vo> collect = level3Catelog.stream().map(l3 -> {
+                            //2、封装成指定的格式
+                            Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+                            return catelog3Vo;
+                        }).collect(Collectors.toList());
+                        catelog2Vo.setCatelog3List(collect);
+
+                    }
+
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+            }
+
+            return catelog2Vos;
+        }));
+
+        return parent_cid;
+    }
+
+
+    // 产生堆外内存溢出：OutOfDirectMemoryError (lettuce版本升级到5.1.8以上解决，或者更换jedis客户端)
+
+    public Map<String, List<Catelog2Vo>> getCatelogJson1() {
         //给缓存中放json字符串，拿出的json字符串，需要逆转位能使用的对象类型（序列化与反序列化）
 
         /**
@@ -139,7 +183,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
         if (StringUtils.isEmpty(catelogJSON)) {
             //2、缓存中没有数据,则查询数据库
-            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDbWithRedisLock();
+            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDbWithRedissonLock();
 
             return catelogJsonFromDb;
         }
