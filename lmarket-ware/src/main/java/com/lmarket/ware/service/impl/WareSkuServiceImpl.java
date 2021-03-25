@@ -90,6 +90,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 
             //查询当前sku的总库存量
             //select sum(stock-stock_locked) from wms_ware_sku where sku_id = 1
+            //SELECT SUM(stock-CASE WHEN stock_locked IS NULL THEN 0 ELSE stock_locked END) counts FROM `wms_ware_sku` where sku_id = 1
             Long count = baseMapper.getSkuStock(skuId);
             vo.setSkuId(skuId);
             vo.setHasStock(count == null ? false : count > 0);
