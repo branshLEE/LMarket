@@ -18,7 +18,7 @@ public class SpuSaveVo {
 
     private String spuName;
     private String spuDescription;
-    private Long catalogId;
+    private Long catelogId;
     private Long brandId;
     private BigDecimal weight;
     private int publishStatus;
