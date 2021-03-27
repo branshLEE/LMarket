@@ -5,9 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>LMarket-首页</title>
-  <link rel="stylesheet" href="index/css/swiper-3.4.2.min.css">
-  <link rel="stylesheet" href="index/css/GL.css">
+  <title>LMarket（你想要的，这里都有!）</title>
+  <link rel="icon" href="/static/index/img/LM.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/static/index/css/swiper-3.4.2.min.css">
+  <link rel="stylesheet" href="/static/index/css/GL.css">
   <script src="/static/index/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
 
   <script src="/static/index/js/swiper-3.4.2.jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -49,7 +50,7 @@
     <!--头部-->
     <div class="header_head">
       <div class="header_head_box">
-        <a href="#" class="img"><img src="/static/index/img/Lmarket_logo.jpg" /></a>
+        <a href="http://lmarket.com" class="img"><img src="/static/index/img/Lmarket_logo.jpg" /></a>
         <b class="header_head_p">
   						<a href="#">
   							<img src="/static/index/img/img_05.png" style="border-radius: 50%;"/>
@@ -115,7 +116,7 @@
         <input id="searchText" type="text" placeholder="" />
         <span style="background: url('/static/index/img/img_12.png') 0 -1px;"></span>
         <!--<button><i class="glyphicon"></i></button>-->
-        <a href="#" ><img src="/static/index/img/img_09.png" onclick="search()" /></a>
+        <a href="javascript:search();" ><img src="/static/index/img/img_09.png" /></a>
       </div>
       <div class="header_ico">
         <div class="header_gw">
@@ -608,7 +609,7 @@
 <script type="text/javascript">
   function search() {
       var keyword=$("#searchText").val()
-      window.location.href="http://search.gulimall.com/search.html?keyword="+keyword;
+      window.location.href="http://search.lmarket.com/list.html?keyword="+keyword;
   }
 
 </script>

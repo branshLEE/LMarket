@@ -50,4 +50,9 @@ spring:
         - id: lmarket_host_route
           uri: lb://lmarket-product
           predicates:
-            - Host=**.lmarket.com
+            - Host=lmarket.com
+
+        - id: lmarket_search_route
+          uri: lb://lmarket-search
+          predicates:
+            - Host=search.lmarket.com
