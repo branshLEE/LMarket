@@ -789,7 +789,7 @@
                         <div class="sl_value_logo">
                             <ul>
                                 <li th:each="brand : ${result.brands}">
-                                    <a href="/static/search/#">
+                                    <a href="/static/search/#" th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+' )'}">
                                         <img th:src="${brand.brandImg}" alt="">
                                         <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
@@ -821,7 +821,9 @@
                     <div class="sl_value">
                         <ul>
                             <li th:each="catelog : ${result.catelogs}">
-                                <a href="/static/search/#" th:text="${catelog.catelogName}">5.56英寸及以上</a>
+                                <a href="/static/search/#"
+                                   th:href="${'javascript:searchProducts(&quot;catelog3Id&quot;,'+catelog.catelogId+' )'}"
+                                   th:text="${catelog.catelogName}">5.56英寸及以上</a>
                             </li>
                         </ul>
                     </div>
@@ -846,8 +848,10 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="val : ${attr.attrValue}"><a href="/static/search/#"
-                                                                     th:text="${val}">5.56英寸及以上</a></li>
+                            <li th:each="val : ${attr.attrValue}">
+                                <a href="/static/search/#"
+                                   th:href="${'javascript:searchProducts(&quot;attrs&quot;,&quot;'+attr.attrId+'_'+val+'&quot; )'}"
+                                   th:text="${val}">5.56英寸及以上</a></li>
                         </ul>
                     </div>
                 </div>
@@ -1983,8 +1987,14 @@
         $(this).css("color", "#727272")
     })
 
-    function searchProducts() {
-
+    function searchProducts(name, value) {
+        //原来的页面
+        var href = location.href + "";
+        if(href.indexOf("?") != -1){
+            location.href = location.href + "&" + name + "=" + value;
+        }else{
+            location.href = location.href + "?" + name + "=" + value;
+        }
     }
 </script>
 </body>
