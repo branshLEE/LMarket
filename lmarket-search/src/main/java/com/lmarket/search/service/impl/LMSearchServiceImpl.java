@@ -28,6 +28,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +82,14 @@ public class LMSearchServiceImpl implements LMSearchService {
             for (SearchHit hit : hits.getHits()) {
                 String sourceAsString = hit.getSourceAsString();
                 SkuEsModel esModel = JSON.parseObject(sourceAsString, SkuEsModel.class);
+
+                //设置标题高亮
+                if(!StringUtils.isEmpty(param.getKeyword())){
+                    HighlightField skuTitle = hit.getHighlightFields().get("skuTitle");
+                    String s = skuTitle.getFragments()[0].toString();
+                    esModel.setSkuTitle(s);
+                }
+
                 esModels.add(esModel);
             }
         }
