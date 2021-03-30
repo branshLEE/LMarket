@@ -1047,9 +1047,9 @@
                     <!--综合排序-->
                     <div class="filter_top">
                         <div class="filter_top_left">
-                            <a href="/static/search/#">综合排序</a>
-                            <a href="/static/search/#">销量</a>
-                            <a href="/static/search/#">价格</a>
+                            <a class="sort_a" sort="hotScore" href="/static/search/#">综合排序</a>
+                            <a class="sort_a" sort="saleCount" href="/static/search/#">销量</a>
+                            <a class="sort_a" sort="skuPrice" href="/static/search/#">价格</a>
                             <a href="/static/search/#">评论分</a>
                             <a href="/static/search/#">上架时间</a>
                         </div>
@@ -2008,7 +2008,7 @@
         var href = location.href;
         if(href.indexOf("pageNum") != -1){
             //覆盖
-            location.href = replaceParamVal(href, "pageNum", pn);
+            location.href = replaceOrAddParamVal(href, "pageNum", pn);
         }else{
             location.href = location.href + "&pageNum=" + pn;
         }
@@ -2016,11 +2016,64 @@
     });
 
     //覆盖
-    function replaceParamVal(url, paramName, replaceVal){
+    function replaceOrAddParamVal(url, paramName, replaceVal){
         var oUrl = url.toString();
-        var re = eval('/(' + paramName + '=)([^&]*)/gi');
-        var nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
-        return nUrl;
+
+        //如果有，就添加，没有就覆盖
+        if(oUrl.indexOf(paramName) != -1){
+            var re = eval('/(' + paramName + '=)([^&]*)/gi');
+            var nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
+            return nUrl;
+        }else{
+            var nUrl = "";
+            if (oUrl.indexOf("?") != -1) {
+                nUrl = oUrl + "&" + paramName + '=' + replaceVal;
+            } else {
+                nUrl = oUrl + "?" + paramName + '=' + replaceVal;
+            }
+            return nUrl;
+        }
+    }
+
+    $(".sort_a").click(function (){
+       // color: #FFF;
+       //  border-color: #e4393c;
+       //  background: #e4393c;
+
+        //改变当前元素已经兄弟元素的样式
+        changeStyle(this);
+
+        //跳转到指定位置 sort=skuPrice_desc/asc
+        var sort = $(this).attr("sort");
+        sort = $(this).hasClass("desc")?sort+"_desc":sort+"_asc";
+        location.href = replaceOrAddParamVal(location.href, "sort", sort);
+
+        //禁用默认行为
+        return false;
+    });
+
+    function changeStyle(cs){
+        $(".sort_a").css({"color":"#333", "border-color":"#CCC", "background":"#FFF"});
+        $(".sort_a").each(function (){
+            var text = $(this).text().replace("👆", "").replace("👇", "");
+            $(this).text(text);
+        });
+
+        $(cs).css({"color":"#FFF", "border-color":"#e4393c", "background":"#e4393c"});
+
+        //改变升降序
+        $(cs).toggleClass("desc") //加上就是降序，不加就是升序
+        if($(cs).hasClass("desc")){
+            //降序
+            var text = $(cs).text().replace("👆", "").replace("👇", "");
+            text = text + "👇";
+            $(cs).text(text);
+        }else{
+            //升序
+            var text = $(cs).text().replace("👆", "").replace("👇", "");
+            text = text + "👆";
+            $(cs).text(text);
+        }
     }
 </script>
 </body>
