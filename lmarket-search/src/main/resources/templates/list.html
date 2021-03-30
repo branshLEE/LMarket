@@ -1046,7 +1046,7 @@
                 <div class="filter">
                     <!--综合排序-->
                     <div class="filter_top">
-                        <div class="filter_top_left" th:with="p=${param.sort}">
+                        <div class="filter_top_left" th:with="p=${param.sort}, priceRange=${param.skuPrice}">
                             <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p, 'hotScore') && #strings.endsWith(p, 'desc'))?'sort_a desc':'sort_a'}"
                                th:attr="style=${(#strings.isEmpty(p) || #strings.startsWith(p, 'hotScore'))?'color:#FFF; border-color:#e4393c; background:#e4393c':'color:#333; border-color:#CCC; background:#FFF'}"
                                sort="hotScore" href="/static/search/#">综合排序 [[${(!#strings.isEmpty(p) && #strings.startsWith(p, 'hotScore') && #strings.endsWith(p, 'desc'))?'👇':'👆'}]]</a>
@@ -1058,6 +1058,7 @@
                                sort="skuPrice" href="/static/search/#">价格 [[${(!#strings.isEmpty(p) && #strings.startsWith(p, 'skuPrice') && #strings.endsWith(p, 'desc'))?'👇':'👆'}]]</a>
                             <a href="/static/search/#">评论分</a>
                             <a href="/static/search/#">上架时间</a>
+                            <input id="skuPriceFrom" type="number" style="width: 100px; margin-left: 30px;" th:value="${#strings.isEmpty(priceRange)?'':#strings.substringBefore(priceRange, '_')}"> - <input id="skuPriceTo" type="number" style="width: 100px;" th:value="${#strings.isEmpty(priceRange)?'':#strings.substringAfter(priceRange, '_')}"> <button id="skuPriceSearch">确定<button>
                         </div>
                         <div class="filter_top_right">
                             <span class="fp-text">
@@ -1166,8 +1167,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/static/search/#">
-                                        <i></i>
+                                    <a href="#">
+                                        <input id="showHasStock" type="checkbox">
                                         仅显示有货
                                     </a>
                                 </li>
@@ -2085,6 +2086,15 @@
             $(cs).text(text);
         }
     }
+
+    $("#skuPriceSearch").click(function (){
+       //1、拼上价格区间的查询条件
+        var from = $("#skuPriceFrom").val();
+        var to = $("#skuPriceTo").val();
+
+        var query = from + "_" + to;
+        location.href = replaceOrAddParamVal(location.href, "skuPrice", query);
+    });
 </script>
 </body>
 </html>
