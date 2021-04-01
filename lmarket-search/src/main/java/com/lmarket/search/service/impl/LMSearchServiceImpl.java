@@ -1,10 +1,14 @@
 package com.lmarket.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.common.to.es.SkuEsModel;
+import com.common.utils.R;
 import com.lmarket.search.config.LmarketElasticSearchConfig;
 import com.lmarket.search.constant.EsConstant;
+import com.lmarket.search.feign.ProductFeignService;
 import com.lmarket.search.service.LMSearchService;
+import com.lmarket.search.vo.AttrResponseVo;
 import com.lmarket.search.vo.SearchParam;
 import com.lmarket.search.vo.SearchResult;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +49,9 @@ public class LMSearchServiceImpl implements LMSearchService {
 
     @Autowired
     private RestHighLevelClient client;
+
+    @Autowired
+    ProductFeignService productFeignService;
 
     //去es检索
     @Override
@@ -99,46 +108,27 @@ public class LMSearchServiceImpl implements LMSearchService {
         List<SearchResult.AttrVo> attrVos = new ArrayList<>();
         ParsedNested attr_agg = response.getAggregations().get("attr_agg");
 
-        SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
+        ParsedLongTerms attr_id_agg = attr_agg.getAggregations().get("attr_id_agg");
+        for (Terms.Bucket bucket : attr_id_agg.getBuckets()) {
+            SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
+            //1、得到属性的id
+            long attrId = bucket.getKeyAsNumber().longValue();
 
-        //1、得到属性的id
-        long attrId = ((ParsedLongTerms) attr_agg.getAggregations().get("attr_id_agg")).getBuckets().get(0).getKeyAsNumber().longValue();
 
-        //2、得到属性的名字
-        String attrName = ((ParsedStringTerms) attr_agg.getAggregations().get("attr_name_agg")).getBuckets().get(0).getKeyAsString();
+            //2、得到属性的名字
+            String attrName = ((ParsedStringTerms) bucket.getAggregations().get("attr_name_agg")).getBuckets().get(0).getKeyAsString();
 
-        //3、得到属性的所有值
-        List<String> attrValue = ((ParsedStringTerms) attr_agg.getAggregations().get("attr_value_agg")).getBuckets().stream().map(item -> {
-            String keyAsString = item.getKeyAsString();
-            return keyAsString;
-        }).collect(Collectors.toList());
+            //3、得到属性的所有值
+            List<String> attrValues = ((ParsedStringTerms) bucket.getAggregations().get("attr_value_agg")).getBuckets().stream().map(item -> {
+                String keyAsString = item.getKeyAsString();
+                return keyAsString;
+            }).collect(Collectors.toList());
 
-        attrVo.setAttrId(attrId);
-        attrVo.setAttrName(attrName);
-        attrVo.setAttrValue(attrValue);
-        attrVos.add(attrVo);
-
-        //ParsedLongTerms attr_id_agg = attr_agg.getAggregations().get("attr_id_agg");
-//        for (Terms.Bucket bucket : attr_agg.getBuckets()) {
-//            SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
-//            //1、得到属性的id
-//            //long attrId = bucket.getKeyAsNumber().longValue();
-//
-//
-//            //2、得到属性的名字
-//            String attrName = ((ParsedStringTerms) bucket.getAggregations().get("attr_name_agg")).getBuckets().get(0).getKeyAsString();
-//
-//            //3、得到属性的所有值
-//            List<String> attrValues = ((ParsedStringTerms) bucket.getAggregations().get("attr_value_agg")).getBuckets().stream().map(item -> {
-//                String keyAsString = item.getKeyAsString();
-//                return keyAsString;
-//            }).collect(Collectors.toList());
-//
-//            attrVo.setAttrId(attrId);
-//            attrVo.setAttrName(attrName);
-//            attrVo.setAttrValue(attrValues);
-//            attrVos.add(attrVo);
-//        }
+            attrVo.setAttrId(attrId);
+            attrVo.setAttrName(attrName);
+            attrVo.setAttrValue(attrValues);
+            attrVos.add(attrVo);
+        }
 
         result.setAttrs(attrVos);
 
@@ -201,7 +191,48 @@ public class LMSearchServiceImpl implements LMSearchService {
         }
         result.setPageNavs(pageNavs);
 
+
+        //8、构建面包屑导航功能
+        if(param.getAttrs() != null && param.getAttrs().size() > 0){
+
+            List<SearchResult.NavVo> collect = param.getAttrs().stream().map(attr -> {
+                //1、分析每个attr传过来的查询参数值
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+
+                //attrs=2_5寸:6寸
+                String[] s = attr.split("_");
+                navVo.setNavValue(s[1]);
+                R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                if(r.getCode() == 0){
+                    TypeReference<AttrResponseVo> reference = new TypeReference<>() {
+                    };
+                    AttrResponseVo data = r.getData("attr", reference);
+                    String name = data.getAttrName();
+                    navVo.setNavName(name);
+                }else{
+                    navVo.setNavName(s[0]);
+                }
+
+                //2、取消了这个面包屑以后，我们要跳转到那个地方，将请求地址的url里面的当前置空
+                //拿到所有的查询条件，去掉当前
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String replace = param.get_queryString().replace("&attrs=" + encode, "");
+                navVo.setLink("http://search.lmarket.com/list.html?"+replace);
+
+                return navVo;
+            }).collect(Collectors.toList());
+
+            result.setNavs(collect);
+        }
+
         return result;
+
+
     }
 
 
@@ -234,6 +265,7 @@ public class LMSearchServiceImpl implements LMSearchService {
         if(param.getBrandId() != null && param.getBrandId().size() > 0){
             boolQueryBuilder.filter(QueryBuilders.termsQuery("brandId", param.getBrandId()));
         }
+
         //1.2 按照属性进行查询
         if(param.getAttrs() != null && param.getAttrs().size() > 0){
 
@@ -327,9 +359,9 @@ public class LMSearchServiceImpl implements LMSearchService {
         //3.1 聚合出当前所有的attrId
         TermsAggregationBuilder attr_id_agg = AggregationBuilders.terms("attr_id_agg").field("attrs.attrId");
         //3.2 聚合分析出当前attr_id对应的名字
-        attr_agg.subAggregation(AggregationBuilders.terms("attr_name_agg").field("attrs.attrName").size(1));
+        attr_id_agg.subAggregation(AggregationBuilders.terms("attr_name_agg").field("attrs.attrName").size(1));
         //3.3 聚合分析出当前attr_id对应的所有可能的属性值attrValue
-        attr_agg.subAggregation(AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(50));
+        attr_id_agg.subAggregation(AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(50));
         attr_agg.subAggregation(attr_id_agg);
         sourceBuilder.aggregation(attr_agg);
 

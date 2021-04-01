@@ -9,6 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class SearchController {
 
@@ -22,11 +26,23 @@ public class SearchController {
      * @return
      */
     @GetMapping("/list.html")
-    public String listPage(SearchParam param, Model model){
+    public String listPage(SearchParam param, Model model, HttpServletRequest request){
+
+        String queryString = request.getQueryString();
+        param.set_queryString((queryString));
 
         //1、根据传递来的页面的查询参数，去es中检索商品
         SearchResult result = lmSearchService.search(param);
         model.addAttribute("result", result);
+
+        List<SearchResult.AttrVo> attrs = result.getAttrs();
+        List<String> collect = attrs.stream().map(item -> {
+            Long attrId = item.getAttrId();
+            String attrName = item.getAttrName();
+            List<String> attrValue = item.getAttrValue();
+            return attrName;
+        }).collect(Collectors.toList());
+        System.out.println("attrName = "+collect);
 
         return "list";
     }
