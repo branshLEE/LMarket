@@ -218,6 +218,7 @@ public class LMSearchServiceImpl implements LMSearchService {
                 String encode = null;
                 try {
                     encode = URLEncoder.encode(attr, "UTF-8");
+                    encode = encode.replace("+", "%20"); //浏览器对空格编码和Java不一样
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
