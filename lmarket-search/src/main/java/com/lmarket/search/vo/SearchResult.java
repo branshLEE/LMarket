@@ -3,6 +3,7 @@ package com.lmarket.search.vo;
 import com.common.to.es.SkuEsModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,7 +27,8 @@ public class SearchResult {
     //==========================以上返回给页面所有的信息==============================
 
     //面包屑导航数据
-    private List<NavVo> navs;
+    private List<NavVo> navs = new ArrayList<>();
+    private List<Long> attrIds = new ArrayList<>();
 
     @Data
     public static class NavVo{

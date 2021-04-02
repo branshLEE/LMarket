@@ -22,7 +22,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
@@ -128,6 +127,7 @@ public class LMSearchServiceImpl implements LMSearchService {
             attrVo.setAttrName(attrName);
             attrVo.setAttrValue(attrValues);
             attrVos.add(attrVo);
+
         }
 
         result.setAttrs(attrVos);
@@ -203,6 +203,10 @@ public class LMSearchServiceImpl implements LMSearchService {
                 String[] s = attr.split("_");
                 navVo.setNavValue(s[1]);
                 R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+
+                //拿到被用到的attrId
+                result.getAttrIds().add(Long.parseLong(s[0]));
+
                 if(r.getCode() == 0){
                     TypeReference<AttrResponseVo> reference = new TypeReference<>() {
                     };
@@ -215,14 +219,7 @@ public class LMSearchServiceImpl implements LMSearchService {
 
                 //2、取消了这个面包屑以后，我们要跳转到那个地方，将请求地址的url里面的当前置空
                 //拿到所有的查询条件，去掉当前
-                String encode = null;
-                try {
-                    encode = URLEncoder.encode(attr, "UTF-8");
-                    encode = encode.replace("+", "%20"); //浏览器对空格编码和Java不一样
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String replace = param.get_queryString().replace("&attrs=" + encode, "");
+                String replace = replaceQueryString(param, attr, "attrs");
                 navVo.setLink("http://search.lmarket.com/list.html?"+replace);
 
                 return navVo;
@@ -231,9 +228,46 @@ public class LMSearchServiceImpl implements LMSearchService {
             result.setNavs(collect);
         }
 
+        //品牌，分类
+        if(param.getBrandId() != null && param.getBrandId().size() > 0){
+            List<SearchResult.NavVo> navs = result.getNavs();
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+            navVo.setNavName("品牌");
+            //TODO 远程查询所有品牌
+            R r = productFeignService.brandInfo(param.getBrandId());
+            if(r.getCode() == 0){
+                List<SearchResult.BrandVo> brand = r.getData("brand", new TypeReference<List<SearchResult.BrandVo>>() {
+                });
+                StringBuffer stringBuffer = new StringBuffer();
+                String replace = "";
+                for (SearchResult.BrandVo brandVo : brand) {
+                    stringBuffer.append(brandVo.getBrandName()+";");
+                    replace = replaceQueryString(param, brandVo.getBrandId()+"", "brandId");
+                }
+                navVo.setNavValue(stringBuffer.toString());
+                navVo.setLink("http://search.lmarket.com/list.html?"+replace);
+            }
+
+            navs.add(navVo);
+        }
+
+        //TODO 分类，不需要导航取消
+
         return result;
 
 
+    }
+
+    private String replaceQueryString(SearchParam param, String value, String key) {
+        String encode = null;
+        try {
+            encode = URLEncoder.encode(value, "UTF-8");
+            encode = encode.replace("+", "%20"); //浏览器对空格编码和Java不一样
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String replace = param.get_queryString().replace("&"+key+"=" + encode, "");
+        return replace;
     }
 
 

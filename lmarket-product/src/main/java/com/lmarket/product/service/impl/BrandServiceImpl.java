@@ -3,8 +3,12 @@ package com.lmarket.product.service.impl;
 import com.common.utils.PageUtils;
 import com.common.utils.Query;
 import com.lmarket.product.service.CategoryBrandRelationService;
+import com.lmarket.product.vo.BrandVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -52,6 +56,14 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
 
             //TODO 更新其他关联
         }
+    }
+
+    @Cacheable(value = "brand", key = "'brandinfo:'+#root.args[0]")
+    @Override
+    public List<BrandEntity> getBrandsByIds(List<Long> brandIds) {
+
+        List<BrandEntity> brandId = baseMapper.selectList(new QueryWrapper<BrandEntity>().in("brand_Id", brandIds));
+        return brandId;
     }
 
 }

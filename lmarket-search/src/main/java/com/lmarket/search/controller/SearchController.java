@@ -35,15 +35,6 @@ public class SearchController {
         SearchResult result = lmSearchService.search(param);
         model.addAttribute("result", result);
 
-        List<SearchResult.AttrVo> attrs = result.getAttrs();
-        List<String> collect = attrs.stream().map(item -> {
-            Long attrId = item.getAttrId();
-            String attrName = item.getAttrName();
-            List<String> attrValue = item.getAttrValue();
-            return attrName;
-        }).collect(Collectors.toList());
-        System.out.println("attrName = "+collect);
-
         return "list";
     }
 }
