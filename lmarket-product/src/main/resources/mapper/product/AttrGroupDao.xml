@@ -12,6 +12,30 @@
         <result property="icon" column="icon"/>
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
+<!--    resultType 返回集合里面元素的类型-->
+    <resultMap id="spuItemAttrGroupVo" type="com.lmarket.product.vo.SpuItemAttrGroupVo">
+        <result property="groupName" column="attr_group_name"></result>
+        <collection property="attrs" ofType="com.lmarket.product.vo.Attr">
+            <result column="attr_name" property="attrName"></result>
+            <result column="attr_value" property="attrValue"></result>
+        </collection>
+    </resultMap>
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="spuItemAttrGroupVo">
+        SELECT
+            ag.attr_group_id,
+            ag.attr_group_name,
+            aar.attr_id,
+            attr.attr_name,
+            pav.attr_value,
+            pav.spu_id
+        FROM `pms_attr_group` ag
+                 LEFT JOIN `pms_attr_attrgroup_relation` aar ON aar.attr_group_id = ag.attr_group_id
+                 LEFT JOIN `pms_attr` attr ON attr.attr_id = aar.attr_id
+                 LEFT JOIN `pms_product_attr_value` pav ON pav.attr_id = attr.attr_id
+        WHERE ag.catelog_id=#{catelogId} AND pav.spu_id=#{spuId}
+
+    </select>
 
 
 </mapper>

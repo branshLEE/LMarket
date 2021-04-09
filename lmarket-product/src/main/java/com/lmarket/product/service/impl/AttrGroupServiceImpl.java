@@ -4,8 +4,9 @@ import com.common.utils.PageUtils;
 import com.common.utils.Query;
 import com.lmarket.product.entity.AttrEntity;
 import com.lmarket.product.service.AttrService;
-import com.lmarket.product.vo.AttrGroupRelationVo;
 import com.lmarket.product.vo.AttrGroupWithAttrsVo;
+import com.lmarket.product.vo.SkuItemVo;
+import com.lmarket.product.vo.SpuItemAttrGroupVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import com.lmarket.product.dao.AttrGroupDao;
 import com.lmarket.product.entity.AttrGroupEntity;
 import com.lmarket.product.service.AttrGroupService;
 import org.springframework.util.StringUtils;
-import org.w3c.dom.Attr;
 
 
 @Service("attrGroupService")
@@ -88,6 +88,17 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         }).collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catelogId) {
+
+        //1、查出当前spu对应的所有属性的分组信息，以及当前分组下的所有属性对应的值
+
+        AttrGroupDao baseMapper = this.getBaseMapper();
+        List<SpuItemAttrGroupVo> vos = baseMapper.getAttrGroupWithAttrsBySpuId(spuId, catelogId);
+
+        return vos;
     }
 
 }
