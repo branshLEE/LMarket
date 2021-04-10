@@ -24,5 +24,6 @@ public class SkuItemVo {
     //5、获取spu的规格参数信息
     List<SpuItemAttrGroupVo> groupAttrs;
 
+    boolean hasStock = true;
 
 }
