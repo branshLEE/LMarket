@@ -1,6 +1,9 @@
 package com.lmarket.thirdparty;
 
 import com.aliyun.oss.OSS;
+import com.lmarket.thirdparty.component.SmsComponent;
+import com.lmarket.thirdparty.util.HttpUtils;
+import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,12 +11,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class LmarketThirdPartyApplicationTests {
 
     @Autowired
     OSS ossClient;
+
+    @Autowired
+    SmsComponent smsComponent;
+
+    @Test
+    public void testSendSms(){
+        smsComponent.sendSmsCode("19173311311", "1311");
+    }
 
     @Test
     public void testUpload() throws FileNotFoundException {
