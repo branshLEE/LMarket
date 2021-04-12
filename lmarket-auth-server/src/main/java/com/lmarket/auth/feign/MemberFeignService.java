@@ -1,6 +1,7 @@
 package com.lmarket.auth.feign;
 
 import com.common.utils.R;
+import com.lmarket.auth.vo.UserLoginVo;
 import com.lmarket.auth.vo.UserRegistVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,5 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface MemberFeignService {
 
     @PostMapping("/member/member/regist")
-    public R regist(@RequestBody UserRegistVo vo);
+    R regist(@RequestBody UserRegistVo vo);
+
+    @PostMapping("/member/member/login")
+    R login(@RequestBody UserLoginVo vo);
 }

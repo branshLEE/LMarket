@@ -6,6 +6,7 @@ import java.util.Map;
 import com.common.exception.BizCodeEnume;
 import com.lmarket.member.exception.PhoneExistException;
 import com.lmarket.member.exception.UsernameExistException;
+import com.lmarket.member.vo.MemberLoginVo;
 import com.lmarket.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +60,17 @@ public class MemberController {
             return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
         }
         return R.ok();
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo){
+
+        MemberEntity entity = memberService.login(vo);
+        if(entity != null){
+            return R.ok();
+        }else {
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
     }
 
     @RequestMapping("/list")

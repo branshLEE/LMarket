@@ -6,6 +6,7 @@ import com.common.exception.BizCodeEnume;
 import com.common.utils.R;
 import com.lmarket.auth.feign.MemberFeignService;
 import com.lmarket.auth.feign.ThirdPartFeignService;
+import com.lmarket.auth.vo.UserLoginVo;
 import com.lmarket.auth.vo.UserRegistVo;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
@@ -130,5 +131,22 @@ public class LoginController {
             //校验出错，转发到注册页面
             return "redirect:http://auth.lmarket.com/reg.html";
         }
+    }
+
+    @PostMapping("/login")
+    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes){
+
+        //远程登录
+        R login = memberFeignService.login(vo);
+        if(login.getCode() == 0){
+            //成功
+            return "redirect:http://lmarket.com";
+        }else{
+            Map<String, String> errors = new HashMap<>();
+            errors.put("msg", login.getData("msg", new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.lmarket.com/login.html";
+        }
+
     }
 }

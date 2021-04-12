@@ -5,6 +5,7 @@ import com.common.utils.PageUtils;
 import com.lmarket.member.entity.MemberEntity;
 import com.lmarket.member.exception.PhoneExistException;
 import com.lmarket.member.exception.UsernameExistException;
+import com.lmarket.member.vo.MemberLoginVo;
 import com.lmarket.member.vo.MemberRegistVo;
 
 import java.util.Map;
@@ -25,5 +26,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkPhoneUnique(String phone) throws PhoneExistException;
 
     void checkUsernameUnique(String username) throws UsernameExistException;
+
+    MemberEntity login(MemberLoginVo vo);
 }
 
