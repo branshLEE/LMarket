@@ -3,14 +3,14 @@ package com.lmarket.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.common.exception.BizCodeEnume;
+import com.lmarket.member.exception.PhoneExistException;
+import com.lmarket.member.exception.UsernameExistException;
+import com.lmarket.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lmarket.member.entity.MemberEntity;
 import com.lmarket.member.service.MemberService;
@@ -46,6 +46,19 @@ public class MemberController {
     @RequestMapping("/test")
     public R test(){
         return R.ok().put("name", name).put("age", age);
+    }
+
+    @PostMapping("/regist")
+    public R regist(@RequestBody MemberRegistVo vo){
+
+        try{
+            memberService.regist(vo);
+        }catch (PhoneExistException e){
+            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+        }catch (UsernameExistException e){
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
     }
 
     @RequestMapping("/list")
