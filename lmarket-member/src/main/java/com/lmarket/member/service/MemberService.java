@@ -7,6 +7,7 @@ import com.lmarket.member.exception.PhoneExistException;
 import com.lmarket.member.exception.UsernameExistException;
 import com.lmarket.member.vo.MemberLoginVo;
 import com.lmarket.member.vo.MemberRegistVo;
+import com.lmarket.member.vo.Oauth2UserVo;
 
 import java.util.Map;
 
@@ -28,5 +29,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkUsernameUnique(String username) throws UsernameExistException;
 
     MemberEntity login(MemberLoginVo vo);
+
+    MemberEntity login(Oauth2UserVo vo);
 }
 

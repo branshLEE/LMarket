@@ -7,6 +7,7 @@ import com.lmarket.member.exception.UsernameExistException;
 import com.lmarket.member.service.MemberLevelService;
 import com.lmarket.member.vo.MemberLoginVo;
 import com.lmarket.member.vo.MemberRegistVo;
+import com.lmarket.member.vo.Oauth2UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import com.common.utils.Query;
 import com.lmarket.member.dao.MemberDao;
 import com.lmarket.member.entity.MemberEntity;
 import com.lmarket.member.service.MemberService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Service("memberService")
@@ -108,6 +110,37 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             }else{
                 return null;
             }
+        }
+    }
+
+    @Override
+    public MemberEntity login(Oauth2UserVo vo) {
+
+        //登录和注册合并逻辑
+        String user_id = vo.getUser_id();
+        //1、判断当前社交用户是否已经登录过系统
+        MemberDao memberDao = this.baseMapper;
+        MemberEntity entity = memberDao.selectOne(new QueryWrapper<MemberEntity>().eq("oauth2_userId", user_id));
+        if(entity != null){
+            //用户已经注册
+            MemberEntity update = new MemberEntity();
+            update.setId(entity.getId());
+            update.setAccessToken(vo.getAccess_token());
+
+            memberDao.updateById(update);
+
+            entity.setAccessToken(vo.getAccess_token());
+            return entity;
+        }else {
+            //2、没有查到当前社交用户对应的记录，则注册
+            MemberEntity register = new MemberEntity();
+            register.setOauth2Userid(vo.getUser_id());
+            register.setAccessToken(vo.getAccess_token());
+
+            memberDao.insert(register);
+
+            return register;
+
         }
     }
 

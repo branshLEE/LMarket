@@ -3,11 +3,13 @@ package com.lmarket.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.common.exception.BizCodeEnume;
 import com.lmarket.member.exception.PhoneExistException;
 import com.lmarket.member.exception.UsernameExistException;
 import com.lmarket.member.vo.MemberLoginVo;
 import com.lmarket.member.vo.MemberRegistVo;
+import com.lmarket.member.vo.Oauth2UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -62,6 +64,17 @@ public class MemberController {
         return R.ok();
     }
 
+    @PostMapping("/oauth2/login")
+    public R oauth2Login(@RequestBody Oauth2UserVo vo){
+
+        MemberEntity entity = memberService.login(vo);
+        if(entity != null){
+            return R.ok();
+        }else {
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+    }
+
     @PostMapping("/login")
     public R login(@RequestBody MemberLoginVo vo){
 
@@ -86,12 +99,12 @@ public class MemberController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    //@RequiresPermissions("member:member:info")
     public R info(@PathVariable("id") Long id){
 		MemberEntity member = memberService.getById(id);
 
         return R.ok().put("member", member);
     }
+
 
     /**
      * 保存
