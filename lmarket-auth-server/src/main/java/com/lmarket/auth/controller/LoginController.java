@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.common.constant.AuthServerConstant;
 import com.common.exception.BizCodeEnume;
 import com.common.utils.R;
+import com.common.vo.MemberResponseVo;
 import com.lmarket.auth.feign.MemberFeignService;
 import com.lmarket.auth.feign.ThirdPartFeignService;
 import com.lmarket.auth.vo.UserLoginVo;
@@ -19,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -133,12 +135,15 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes){
+    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes, HttpSession session){
 
         //远程登录
         R login = memberFeignService.login(vo);
         if(login.getCode() == 0){
-            //成功
+            //成功放到session中
+            MemberResponseVo data = login.getData("data", new TypeReference<MemberResponseVo>() {
+            });
+            session.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://lmarket.com";
         }else{
             Map<String, String> errors = new HashMap<>();

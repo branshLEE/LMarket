@@ -58,10 +58,10 @@
 							</li>
 						</ul>
 						<ul class="header_ul_right">
-							<li style="border: 0;"><a href="/static/item/../登录页面\index.html" class="aa">你好，请登录</a></li>
-							<li><a href="/static/item/../注册页面\index.html" style="color: red;">免费注册</a> |</li>
-							<li><a href="/static/item/javascript:;" class="aa">我的订单</a> |</li>
-							<li class="jingdong"><a href="/static/item/javascript:;">我的LMarket</a><span class="glyphicon glyphicon-menu-down">|</span>
+							<li style="border: 0;"><a href="http://auth.lmarket.com/login.html" class="aa">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':(#strings.length(session.loginUser)>133?session.loginUser.username:session.loginUser)}]]</a></li>
+							<li th:if="${#strings.isEmpty(session.loginUser)}"><a href="http://auth.lmarket.com/reg.html" style="color: red;">免费注册</a> |</li>
+							<li><a href="/static/item/javascript:;" class="aa">我的订单 |</a></li>
+							<li class="jingdong"><a href="/static/item/javascript:;">LMarket</a><span class="glyphicon glyphicon-menu-down">|</span>
 								<ol class="jingdong_ol">
 									<li><a href="/static/item/javascript:;">待处理订单</a></li>
 									<li><a href="/static/item/javascript:;">消息</a></li>

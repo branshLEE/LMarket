@@ -65,10 +65,12 @@
         </b>
         <ul>
             <li>
-                <a href="/static/search/#" class="li_2">你好，请登录</a>
+                <a href="http://auth.lmarket.com/login.html">
+                    [[${#strings.isEmpty(session.loginUser)?'你好！请登录':(#strings.length(session.loginUser)>133?session.loginUser.username:session.loginUser)}]]
+                </a>
             </li>
             <li>
-                <a href="/static/search/#">免费注册</a>
+                <a th:if="${#strings.isEmpty(session.loginUser)}" href="http://auth.lmarket.com/reg.html" class="li_2">免费注册</a>
             </li>
             <span>|</span>
             <li>
