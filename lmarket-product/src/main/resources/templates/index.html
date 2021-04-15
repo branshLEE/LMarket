@@ -96,7 +96,7 @@
   					</b>
         <ul>
           <li>
-            <a href="http://auth.lmarket.com/login.html">你好，请登录</a>
+            <a href="http://auth.lmarket.com/login.html">[[${#strings.isEmpty(session.loginUser)?'你好，请登录':session.loginUser}]]</a>
           </li>
           <li>
             <a href="http://auth.lmarket.com/reg.html" class="li_2">免费注册</a>
