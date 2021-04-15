@@ -61,3 +61,8 @@ spring:
           uri: lb://lmarket-auth-server
           predicates:
             - Host=auth.lmarket.com
+
+        - id: lmarket_cart_route
+          uri: lb://lmarket-cart
+          predicates:
+            - Host=cart.lmarket.com
