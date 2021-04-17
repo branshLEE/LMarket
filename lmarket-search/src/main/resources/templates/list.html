@@ -66,7 +66,7 @@
         <ul>
             <li>
                 <a href="http://auth.lmarket.com/login.html">
-                    [[${#strings.isEmpty(session.loginUser)?'你好！请登录':(#strings.length(session.loginUser)>133?session.loginUser.username:session.loginUser)}]]
+                    [[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]
                 </a>
             </li>
             <li>

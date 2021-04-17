@@ -1,5 +1,6 @@
 package com.lmarket.auth.controller;
 
+import com.alibaba.fastjson.TypeReference;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -8,6 +9,7 @@ import com.alipay.api.request.AlipayUserInfoShareRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.common.utils.R;
+import com.common.vo.MemberResponseVo;
 import com.lmarket.auth.feign.MemberFeignService;
 import com.lmarket.auth.vo.Oauth2UserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -66,11 +68,14 @@ public class OAuth2Controller {
 
         //第三方账号登录
         R oauth2Login = memberFeignService.oauth2Login(vo);
+        MemberResponseVo data = oauth2Login.getData("data", new TypeReference<MemberResponseVo>() {
+        });
+
 
         if(oauth2Login.getCode() == 0){
             log.info("登录成功！");
-//            System.out.println("哈哈哈哈哈哈哈哈哈   "+vo.getNick_name());
-            session.setAttribute("loginUser", vo.getNick_name());
+            System.out.println("哈哈哈哈哈哈哈哈哈   "+data);
+            session.setAttribute("loginUser", data);
             return "redirect:http://lmarket.com";
         }else{
             return "redirect:http://auth.lmarket.com/login.html";

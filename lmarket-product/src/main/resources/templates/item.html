@@ -16,7 +16,7 @@
 			<!--品牌官方网站-->
 					<div class="min">
 						<ul class="header_ul_left">
-							<li class="glyphicon glyphicon-home"> <a href="/static/item/shouye.html" class="aa">LM首页</a></li>
+							<li class="glyphicon glyphicon-home"> <a href="http://lmarket.com" class="aa">LM首页</a></li>
 							<li class="glyphicon glyphicon-map-marker"> <a href="/static/item/javascript:;">北京</a>
 								<ol id="beijing">
 									<li style="background: red;"><a href="/static/item/javascript:;" style="color: white;">北京</a></li>
@@ -58,7 +58,7 @@
 							</li>
 						</ul>
 						<ul class="header_ul_right">
-							<li style="border: 0;"><a href="http://auth.lmarket.com/login.html" class="aa">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':(#strings.length(session.loginUser)>133?session.loginUser.username:session.loginUser)}]]</a></li>
+							<li style="border: 0;"><a href="http://auth.lmarket.com/login.html" class="aa">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a></li>
 							<li th:if="${#strings.isEmpty(session.loginUser)}"><a href="http://auth.lmarket.com/reg.html" style="color: red;">免费注册</a> |</li>
 							<li><a href="/static/item/javascript:;" class="aa">我的订单 |</a></li>
 							<li class="jingdong"><a href="/static/item/javascript:;">LMarket</a><span class="glyphicon glyphicon-menu-down">|</span>
@@ -609,7 +609,7 @@
 
 						<div class="box-btns clear">
 							<div class="box-btns-one">
-								<input type="text" name="" id="" value="1" />
+								<input type="text" name="" id="numInput" value="1" />
 								<div class="box-btns-one1">
 
 									<div>
@@ -626,7 +626,7 @@
 								</div>
 							</div>
 							<div class="box-btns-two">
-								<a href="http://cart.lmarket.com/addToCart">
+								<a href="#" id="addToCart" th:attr="skuId=${item.info.skuId}">
 									加入购物车
 								</a>
 							</div>
@@ -1301,6 +1301,14 @@
 		$(".sku_attr_value").parent().css({"border":"1px solid #CCC"});
 		$("a[class='sku_attr_value checked']").parent().css({"border":"1px solid red"});
 	})
+
+	$("#addToCart").click(function(){
+		var num = $("#numInput").val();
+		var skuId = $(this).attr("skuId");
+		location.href = "http://cart.lmarket.com/addToCart?skuId="+skuId+"&num="+num;
+
+		return false;
+	});
 
 </script>
 

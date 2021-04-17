@@ -24,8 +24,8 @@
 
 					</ul>
 					<ul class="header-right">
-						<li><a href="/static/cart./登录页面\index.html" style="color: red;">你好，请登录</a></li>
-						<li><a href="/static/cart./注册页面\index.html">免费注册</a></li>
+						<li><a href="http://auth.lmarket.com/login.html" style="color: red;">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a></li>
+						<li><a th:if="${#strings.isEmpty(session.loginUser)}" href="http://auth.lmarket.com/reg.html">免费注册</a></li>
 						<li class="spacer"></li>
 						<li><a href="">我的订单</a></li>
 						<li class="spacer"></li>
