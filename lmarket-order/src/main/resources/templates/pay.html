@@ -12,7 +12,7 @@
       <div class="Jdbox_head">
         <a href="http://lmarket.com"><img src="/static/order/pay/img/LM_logo.png" alt=""></a><span class="bank">收银台</span>
         <ul>
-          <li><span>[[${session.loginUser.nickname==null?'':session.loginUser.nickname}]]</span> | <span>退出</span></li>
+          <li><span>[[${session.loginUser==null?'':session.loginUser.nickname}]]</span> | <span>退出</span></li>
           <li><a th:if="${!#strings.isEmpty(session.loginUser)}" href="http://order.lmarket.com/list.html">我的订单</a></li>
           <li>支付帮助</li>
         </ul>
