@@ -13,6 +13,10 @@ public class MemberResponseVo implements Serializable {
     /**
      *
      */
+    private Long memberId;
+    /**
+     *
+     */
     private Long levelId;
     /**
      *

@@ -25,7 +25,11 @@ public class MemberEntity implements Serializable {
 	@TableId
 	private Long id;
 	/**
-	 * 
+	 *
+	 */
+	private Long memberId;
+	/**
+	 *
 	 */
 	private Long levelId;
 	/**
