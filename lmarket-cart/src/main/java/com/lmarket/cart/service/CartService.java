@@ -4,6 +4,7 @@ import com.lmarket.cart.vo.Cart;
 import com.lmarket.cart.vo.CartItem;
 import org.springframework.ui.Model;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface CartService {
@@ -57,4 +58,7 @@ public interface CartService {
      * @param skuId
      */
     void deleteItem(Long skuId);
+
+    List<CartItem> getUserCartItems();
+
 }
