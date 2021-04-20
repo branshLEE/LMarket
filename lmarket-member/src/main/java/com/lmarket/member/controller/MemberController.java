@@ -3,7 +3,6 @@ package com.lmarket.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.common.exception.BizCodeEnume;
 import com.lmarket.member.exception.PhoneExistException;
 import com.lmarket.member.exception.UsernameExistException;

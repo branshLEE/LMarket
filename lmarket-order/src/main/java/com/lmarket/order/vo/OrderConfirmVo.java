@@ -50,8 +50,7 @@ public class OrderConfirmVo {
         BigDecimal total = new BigDecimal("0");
         if(items != null){
             for (OrderItemVo item : items) {
-                BigDecimal add = total.add(item.getPrice().multiply(new BigDecimal(item.getCount().toString())));
-                total = total.add(add);
+                total = total.add(item.getPrice().multiply(new BigDecimal(item.getCount().toString())));
             }
         }
         return total;
