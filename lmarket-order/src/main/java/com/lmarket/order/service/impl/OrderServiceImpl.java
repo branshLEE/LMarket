@@ -2,6 +2,7 @@ package com.lmarket.order.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.common.exception.BizCodeEnume;
 import com.common.exception.NoStockException;
 import com.common.utils.R;
 import com.common.vo.MemberResponseVo;
@@ -17,6 +18,7 @@ import com.lmarket.order.interceptor.LoginUserInterceptor;
 import com.lmarket.order.service.OrderItemService;
 import com.lmarket.order.to.OrderCreateTo;
 import com.lmarket.order.vo.*;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -133,6 +135,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
+    @GlobalTransactional
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
@@ -179,11 +182,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 if(r.getCode() == 0){
                     //锁库存成功
                     responseVo.setOrder(order.getOrder());
+
+                    //TODO 远程扣减积分
                     return responseVo;
                 }else{
                     //锁库存失败
                     String msg = (String) r.get("msg");
                     throw new NoStockException(msg);
+
 //                    responseVo.setCode(3);
 //                    return responseVo;
                 }

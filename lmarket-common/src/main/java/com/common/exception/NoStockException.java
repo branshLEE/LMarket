@@ -9,7 +9,7 @@ public class NoStockException extends RuntimeException{
     }
 
     public NoStockException(String msg) {
-        super("库存不足");
+        super(msg);
     }
 
     public Long getSkuId() {
