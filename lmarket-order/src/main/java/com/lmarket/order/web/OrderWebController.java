@@ -1,5 +1,6 @@
 package com.lmarket.order.web;
 
+import com.common.exception.NoStockException;
 import com.lmarket.order.service.OrderService;
 import com.lmarket.order.vo.OrderConfirmVo;
 import com.lmarket.order.vo.OrderSubmitVo;
@@ -39,19 +40,26 @@ public class OrderWebController {
     @PostMapping("/submitOrder")
     public String submitOrder(OrderSubmitVo vo, Model model, RedirectAttributes redirectAttributes){
 
-        SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
-        if(responseVo.getCode() == 0){
-            //成功下单，去支付页面
-            model.addAttribute("SubmitOrderResponse", responseVo);
-            return "pay";
-        }else{
-            String msg = "下单失败";
-            switch (responseVo.getCode()){
-                case 1: msg+="订单信息过期，请刷新再次提交"; break;
-                case 2: msg+="订单商品价格发生变化，请确认后再次提交"; break;
-                case 3: msg+="库存锁定失败，商品库存不足"; break;
+        try {
+            SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
+            // 下单失败回到订单重新确认订单信息
+            if(responseVo.getCode() == 0){
+                // 下单成功取支付选项
+                model.addAttribute("submitOrderResp", responseVo);
+                return "pay";
+            }else{
+                String msg = "下单失败";
+                switch (responseVo.getCode()){
+                    case 1: msg += "订单信息过期,请刷新在提交";break;
+                    case 2: msg += "订单商品价格发送变化,请确认后再次提交";break;
+                    case 3: msg += "商品库存不足";break;
+                }
+                redirectAttributes.addFlashAttribute("msg", msg);
+                return "redirect:http://order.lmarket.com/toTrade";
             }
-            redirectAttributes.addFlashAttribute("msg", msg);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            redirectAttributes.addFlashAttribute("msg", message);
             return "redirect:http://order.lmarket.com/toTrade";
         }
         //下单成功，来到支付选择页
