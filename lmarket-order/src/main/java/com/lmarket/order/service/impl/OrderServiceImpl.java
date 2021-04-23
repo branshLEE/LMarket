@@ -18,7 +18,6 @@ import com.lmarket.order.interceptor.LoginUserInterceptor;
 import com.lmarket.order.service.OrderItemService;
 import com.lmarket.order.to.OrderCreateTo;
 import com.lmarket.order.vo.*;
-import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -135,7 +134,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
-    @GlobalTransactional
+//    @GlobalTransactional  seata AT模式不适用于高并发量
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
