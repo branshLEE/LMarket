@@ -41,7 +41,7 @@
               <span>白条还款日 2018-01-27</span>
               <span><font>优惠</font>随机立减(最高10元)</span>
             </li>
-            <li>支付<font>28.90</font>元</li>
+            <li>支付<font th:text="${#numbers.formatDecimal(SubmitOrderResponse.order.payAmount, 1,2)}">28.90</font>元</li>
           </ul>
           <ol>
             <li>

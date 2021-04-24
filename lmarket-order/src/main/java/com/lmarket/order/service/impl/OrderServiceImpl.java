@@ -193,9 +193,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //                    int i=10/0;
 
                     //订单创建成功，发消息给MQ
-                    rabbitTemplate.convertAndSend("order-event-exchange",
-                            "order.create.order",
-                            order.getOrder());
+                    try{
+                        //TODO 保存消息一定会发送出去，做日志记录（给数据库保存每一个消息的详细信息）
+                        rabbitTemplate.convertAndSend("order-event-exchange",
+                                "order.create.order",
+                                order.getOrder());
+                    }catch (Exception e){
+                        //将没发送成功的消息进行重试发送
+
+                    }
+
 
                     return responseVo;
                 }else{
