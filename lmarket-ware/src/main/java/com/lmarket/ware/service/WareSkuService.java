@@ -1,6 +1,7 @@
 package com.lmarket.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.common.to.mq.OrderTo;
 import com.common.to.mq.StockLockedTo;
 import com.common.utils.PageUtils;
 import com.lmarket.ware.entity.WareSkuEntity;
@@ -29,5 +30,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     Boolean orderLockStock(WareSkuLockVo vo);
 
     void unlockStock(StockLockedTo to);
+
+    void unlockStock(OrderTo to);
 }
 

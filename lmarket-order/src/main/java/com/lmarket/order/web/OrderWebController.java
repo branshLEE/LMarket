@@ -44,8 +44,8 @@ public class OrderWebController {
             SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
             // 下单失败回到订单重新确认订单信息
             if(responseVo.getCode() == 0){
-                // 下单成功取支付选项
-                model.addAttribute("submitOrderResp", responseVo);
+                // 下单成功，去支付页面
+                model.addAttribute("SubmitOrderResponse", responseVo);
                 return "pay";
             }else{
                 String msg = "下单失败";

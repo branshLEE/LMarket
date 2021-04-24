@@ -1,6 +1,7 @@
 package com.lmarket.ware.listener;
 
 import com.alibaba.fastjson.TypeReference;
+import com.common.to.mq.OrderTo;
 import com.common.to.mq.StockDetailTo;
 import com.common.to.mq.StockLockedTo;
 import com.common.utils.R;
@@ -32,6 +33,18 @@ public class StockReleaseListener {
 
         System.out.println("收到解锁库存的消息："+to.getDetial().getSkuId());
         try {
+            wareSkuService.unlockStock(to);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }catch (Exception e){
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+        }
+
+    }
+
+    @RabbitHandler
+    public void handleOrderCloseRelease(OrderTo to, Message message, Channel channel) throws IOException {
+        System.out.println("收到订单关闭消息，准备解锁库存："+to.getOrderSn());
+        try{
             wareSkuService.unlockStock(to);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }catch (Exception e){
