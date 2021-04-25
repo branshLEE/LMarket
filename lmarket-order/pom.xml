@@ -31,6 +31,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>4.13.33.ALL</version>
+		</dependency>
+
 		<!--		引入redis-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

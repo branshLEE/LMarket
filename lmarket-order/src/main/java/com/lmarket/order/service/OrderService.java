@@ -5,6 +5,7 @@ import com.common.utils.PageUtils;
 import com.lmarket.order.entity.OrderEntity;
 import com.lmarket.order.vo.OrderConfirmVo;
 import com.lmarket.order.vo.OrderSubmitVo;
+import com.lmarket.order.vo.PayVo;
 import com.lmarket.order.vo.SubmitOrderResponseVo;
 
 import java.util.Map;
@@ -32,5 +33,12 @@ public interface OrderService extends IService<OrderEntity> {
     OrderEntity getOrderStatusByOrderSn(String orderSn);
 
     void closeOrder(OrderEntity entity);
+
+    /**
+     * 获取当前订单的支付信息
+     * @param orderSn
+     * @return
+     */
+    PayVo getOrderPay(String orderSn);
 }
 
