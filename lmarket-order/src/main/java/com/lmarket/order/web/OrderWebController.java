@@ -1,6 +1,8 @@
 package com.lmarket.order.web;
 
-import com.common.exception.NoStockException;
+import com.alibaba.fastjson.JSON;
+import com.common.utils.PageUtils;
+import com.lmarket.order.entity.OrderEntity;
 import com.lmarket.order.service.OrderService;
 import com.lmarket.order.vo.OrderConfirmVo;
 import com.lmarket.order.vo.OrderSubmitVo;
@@ -10,12 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @Controller
 public class OrderWebController {
@@ -30,6 +34,35 @@ public class OrderWebController {
 
         //展示订单确认的数据
         return "confirm";
+    }
+
+    /**
+     * 订单列表
+     * @param model
+     * @param request
+     * @return
+     */
+//    @GetMapping("/orderList")
+//    public String orderList(Model model, HttpServletRequest request){
+//        List<OrderEntity> entity = orderService.listOrder();
+//        model.addAttribute("orderList", entity);
+//        //展示订单列表的数据
+//        return "list";
+//    }
+
+    @GetMapping("/orderList")
+    public String orderList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum, Model model, HttpServletRequest request){
+        //获取到支付宝传来的所有请求数据
+        //验证签名，如果正确，则可以修改订单的状态
+
+        Map<String, Object> page = new HashMap<>();
+        page.put("page", pageNum.toString());
+
+        PageUtils item = orderService.queryPageWithOrderItem(page);
+        model.addAttribute("orderList", item);
+//        System.out.println("lasdfsadfasdf..."+ JSON.toJSONString(item));
+        //展示订单列表的数据
+        return "list";
     }
 
     /**

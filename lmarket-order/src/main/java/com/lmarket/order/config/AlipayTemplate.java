@@ -3,6 +3,7 @@ package com.lmarket.order.config;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 
 import com.lmarket.order.vo.PayVo;
@@ -10,6 +11,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 @ConfigurationProperties(prefix = "alipay")
 @Component
@@ -38,6 +42,8 @@ public class AlipayTemplate {
 
     @Value("${alipay.return_url}")
     private String return_url;
+
+    private String timeout = "30m"; //三十分钟
 
     // 签名方式
     private String sign_type = "RSA2";
@@ -74,6 +80,7 @@ public class AlipayTemplate {
                 + "\"total_amount\":\""+ total_amount +"\","
                 + "\"subject\":\""+ subject +"\","
                 + "\"body\":\""+ body +"\","
+                + "\"timeout_express\":\""+timeout+"\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
         String result = alipayClient.pageExecute(alipayRequest).getBody();
@@ -83,5 +90,26 @@ public class AlipayTemplate {
 
         return result;
 
+    }
+
+    public String closePay(HttpServletRequest request) throws UnsupportedEncodingException, AlipayApiException {
+        //获得初始化的AlipayClient
+        AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key, "json", charset, alipay_public_key, sign_type);
+
+        //设置请求参数
+        AlipayTradeCloseRequest alipayRequest = new AlipayTradeCloseRequest();
+        //商户订单号，商户网站订单系统中唯一订单号
+        String out_trade_no = new String(request.getParameter("WIDTCout_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+        //支付宝交易号
+        String trade_no = new String(request.getParameter("WIDTCtrade_no").getBytes("ISO-8859-1"),"UTF-8");
+        //请二选一设置
+
+        alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\"," +"\"trade_no\":\""+ trade_no +"\"}");
+
+        //请求
+        String result = alipayClient.execute(alipayRequest).getBody();
+
+        //输出
+        return result;
     }
 }

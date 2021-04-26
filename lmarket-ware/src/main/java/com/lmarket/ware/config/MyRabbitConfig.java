@@ -67,7 +67,7 @@ public class MyRabbitConfig {
 
         arguments.put("x-dead-letter-exchange", "stock-event-exchange");
         arguments.put("x-dead-letter-routing-key", "stock.release");
-        arguments.put("x-message-ttl", 120000); //2分钟 2*60000
+        arguments.put("x-message-ttl", 3600000); //一个小时 60*60000
 
         return new Queue("stock.delay.queue", true, false, false, arguments);
     }

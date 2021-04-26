@@ -10,6 +10,7 @@ import com.common.vo.MemberResponseVo;
 import com.lmarket.order.constant.OrderConstant;
 import com.lmarket.order.dao.OrderItemDao;
 import com.lmarket.order.entity.OrderItemEntity;
+import com.lmarket.order.entity.PaymentInfoEntity;
 import com.lmarket.order.enume.OrderStatusEnum;
 import com.lmarket.order.feign.CartFeignService;
 import com.lmarket.order.feign.MemberFeignService;
@@ -17,8 +18,10 @@ import com.lmarket.order.feign.ProductFeignService;
 import com.lmarket.order.feign.WmsFeignService;
 import com.lmarket.order.interceptor.LoginUserInterceptor;
 import com.lmarket.order.service.OrderItemService;
+import com.lmarket.order.service.PaymentInfoService;
 import com.lmarket.order.to.OrderCreateTo;
 import com.lmarket.order.vo.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,7 @@ import com.lmarket.order.dao.OrderDao;
 import com.lmarket.order.entity.OrderEntity;
 import com.lmarket.order.service.OrderService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -54,7 +58,13 @@ import org.springframework.web.context.request.RequestContextHolder;
 public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> implements OrderService {
 
     @Autowired
+    PaymentInfoService paymentInfoService;
+
+    @Autowired
     OrderItemService orderItemService;
+
+    @Autowired
+    OrderService orderService;
 
     @Autowired
     MemberFeignService memberFeignService;
@@ -272,6 +282,92 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         payVo.setBody(entity.getSkuAttrsVals());
 
         return payVo;
+    }
+
+    /**
+     * 获取订单列表
+     * @return
+     */
+    @Override
+    public List<OrderEntity> listOrder() {
+        MemberResponseVo memberResponseVo = LoginUserInterceptor.localUser.get();
+        List<OrderEntity> orderEntities = orderService.list(new QueryWrapper<OrderEntity>().eq("member_id", memberResponseVo.getMemberId()).orderByDesc("id"));
+
+        List<OrderEntity> collect = orderEntities.stream().map(order -> {
+            List<OrderItemEntity> orderItemEntities = orderItemService.getOrderItem(order.getOrderSn());
+            order.setItemEntityList(orderItemEntities);
+
+            OrderEntity orderSn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", order.getOrderSn()));
+
+            order.setOrderSn(orderSn.getOrderSn()); //订单号
+            order.setReceiverName(orderSn.getReceiverName()); //收货人
+            order.setStatus(orderSn.getStatus()); //订单状态
+
+            order.setModifyTime(orderSn.getModifyTime()); //订单时间
+
+            return order;
+        }).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    /**
+     * 处理支付宝的支付结果
+     * @param vo
+     * @return
+     */
+    @Override
+    public String handlePayResult(PayAsyncVo vo) {
+        //1、保存交易流水
+        PaymentInfoEntity paymentInfoEntity = new PaymentInfoEntity();
+        paymentInfoEntity.setAlipayTradeNo(vo.getTrade_no());
+        paymentInfoEntity.setOrderSn(vo.getOut_trade_no());
+        paymentInfoEntity.setPaymentStatus(vo.getTrade_status());
+        paymentInfoEntity.setCallbackTime(vo.getNotify_time());
+
+        paymentInfoService.save(paymentInfoEntity);
+
+        //2、修改订单的状态信息
+        if(vo.getTrade_status().equals("TRADE_SUCCESS") || vo.getTrade_status().equals("TRADE_FINISHED")){
+            //支付成功状态
+            String outTradeNo = vo.getOut_trade_no();
+            this.baseMapper.updateOrderStatus(outTradeNo, OrderStatusEnum.PAYED.getCode()); //修改订单状态-已支付
+        }
+
+        return "success";
+    }
+
+    /**
+     * 以页面返回的方式显示订单列表
+     * @param params
+     * @return
+     */
+    @Override
+    public PageUtils queryPageWithOrderItem(Map<String, Object> params) {
+        MemberResponseVo memberResponseVo = LoginUserInterceptor.localUser.get();
+
+        IPage<OrderEntity> page = this.page(
+                new Query<OrderEntity>().getPage(params),
+                new QueryWrapper<OrderEntity>().eq("member_id", memberResponseVo.getMemberId()).orderByDesc("id")
+        );
+
+        List<OrderEntity> collect = page.getRecords().stream().map(order -> {
+            List<OrderItemEntity> itemEntities = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", order.getOrderSn()));
+            order.setItemEntityList(itemEntities);
+
+            OrderEntity orderSn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", order.getOrderSn()));
+
+            order.setOrderSn(orderSn.getOrderSn()); //订单号
+            order.setReceiverName(orderSn.getReceiverName()); //收货人
+            order.setStatus(orderSn.getStatus()); //订单状态
+
+            order.setModifyTime(orderSn.getModifyTime()); //订单时间
+
+            return order;
+        }).collect(Collectors.toList());
+        page.setRecords(collect);
+
+        return new PageUtils(page);
     }
 
     /**

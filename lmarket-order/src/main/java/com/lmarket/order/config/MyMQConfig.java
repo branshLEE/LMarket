@@ -24,7 +24,7 @@ public class MyMQConfig {
 
         arguments.put("x-dead-letter-exchange", "order-event-exchange");
         arguments.put("x-dead-letter-routing-key", "order.release.order");
-        arguments.put("x-message-ttl", 60000); //1分钟
+        arguments.put("x-message-ttl", 1800000); //30分钟：30*60000
 
         //String name, boolean durable, boolean exclusive, boolean autoDelete, @Nullable Map<String, Object> arguments
         Queue queue = new Queue("order.delay.queue", true, false, false, arguments);

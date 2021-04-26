@@ -3,11 +3,10 @@ package com.lmarket.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.common.utils.PageUtils;
 import com.lmarket.order.entity.OrderEntity;
-import com.lmarket.order.vo.OrderConfirmVo;
-import com.lmarket.order.vo.OrderSubmitVo;
-import com.lmarket.order.vo.PayVo;
-import com.lmarket.order.vo.SubmitOrderResponseVo;
+import com.lmarket.order.entity.OrderItemEntity;
+import com.lmarket.order.vo.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -40,5 +39,11 @@ public interface OrderService extends IService<OrderEntity> {
      * @return
      */
     PayVo getOrderPay(String orderSn);
+
+    PageUtils queryPageWithOrderItem(Map<String, Object> params);
+
+    List<OrderEntity> listOrder();
+
+    String handlePayResult(PayAsyncVo vo);
 }
 
