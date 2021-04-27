@@ -17,7 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,5 +99,21 @@ class LmarketProductApplicationTests {
 			System.out.println(item);
 		});
 	}
+//
+//	@Test
+//	public void test11(){
+//		Date date = new Date();
+//		long time = date.getTime();
+//		System.out.println("ooooo.."+date+"oooooooooooo..."+time);
+//
+//		Date date1 = new Date(1619575200000L);
+//		Date date2 = new Date(1619575200000L);
+//
+//		System.out.println("date1..."+date1.toString()+"  date2..."+date2.toString());
+//
+//		LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+//		String format = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//		System.out.println("start........"+format);
+//	}
 
 }
