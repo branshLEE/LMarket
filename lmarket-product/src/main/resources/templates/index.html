@@ -589,10 +589,14 @@
       var keyword=$("#searchText").val()
       window.location.href="http://search.lmarket.com/list.html?keyword="+keyword;
   }
+  function to_href(skuId){
+    location.href="http://item.lmarket.com/"+skuId+".html";
+  }
   $.get("http://seckill.lmarket.com/currentSeckillSkus", function(resp){
     if(resp.data.length > 0){
       resp.data.forEach(function(item){
-        $("<li></li>>")
+
+        $("<li onclick='to_href("+item.skuId+")'></li>>")
                 .append($("<img style='width: 130px; height: 130px;' src='"+item.skuInfo.skuDefaultImg+"'/>"))
                 .append($("<p>"+item.skuInfo.skuTitle+"</p>"))
                 .append($("<span>"+item.seckillPrice+"</span>"))
