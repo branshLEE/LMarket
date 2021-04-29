@@ -12,6 +12,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.annotation.PostConstruct;
 
@@ -19,8 +20,21 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class MyRabbitConfig {
 
-    @Autowired
+//    @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Primary
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setConnectionFactory(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter());
+
+        this.rabbitTemplate = rabbitTemplate;
+        initRabbitTemplate();
+
+        return rabbitTemplate;
+    }
 
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
@@ -46,7 +60,7 @@ public class MyRabbitConfig {
      * 生产端消ConfirmCallback,ReturnCallback
      * 消费端ACK机制
      */
-    @PostConstruct
+//    @PostConstruct
     public void initRabbitTemplate() {
         // ConfirmCallback消息抵达交换机的回调
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {

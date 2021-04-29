@@ -32,5 +32,9 @@ public class SeckillOrderTo {
      * 会员id
      */
     private Long memberId;
+    /**
+     *  sku图片
+     */
+    private String skuDefaultImg;
 
 }

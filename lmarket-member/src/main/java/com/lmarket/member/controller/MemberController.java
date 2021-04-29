@@ -40,16 +40,6 @@ public class MemberController {
      * 列表
      */
 
-    @Value("${member.name}")
-    private String name;
-    @Value("${member.age}")
-    private Integer age;
-
-    @RequestMapping("/test")
-    public R test(){
-        return R.ok().put("name", name).put("age", age);
-    }
-
     @PostMapping("/regist")
     public R regist(@RequestBody MemberRegistVo vo){
 

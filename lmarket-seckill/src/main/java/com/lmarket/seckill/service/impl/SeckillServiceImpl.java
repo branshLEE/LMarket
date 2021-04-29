@@ -179,6 +179,8 @@ public class SeckillServiceImpl implements SeckillService {
                                 orderTo.setPromotionSessionId(redis.getPromotionSessionId());
                                 orderTo.setSkuId(redis.getSkuId());
                                 orderTo.setSeckillPrice(redis.getSeckillPrice());
+                                orderTo.setSkuDefaultImg(redis.getSkuInfo().getSkuDefaultImg());
+
 
                                 //发送MQ消息
                                 log.info("商品秒杀成功。。。。。");
@@ -208,64 +210,70 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     private void saveSessionInfos(List<SeckillSessionsWithSkus> sessions) {
-        sessions.stream().forEach(session -> {
-            long startTime = session.getStartTime().getTime();
-            long endTime = session.getEndTime().getTime();
-            String key = SESSION_CACHE_PREFIX + startTime + "_" + endTime;
+        if(sessions != null){
+            sessions.stream().forEach(session -> {
+                long startTime = session.getStartTime().getTime();
+                long endTime = session.getEndTime().getTime();
+                String key = SESSION_CACHE_PREFIX + startTime + "_" + endTime;
 
-            //缓存到活动信息
-            Boolean hasKey = redisTemplate.hasKey(key);
-            //保证幂等性
-            if (!hasKey) {
-                List<String> collect = session.getRelationEntityList().stream().map(item ->
-                        item.getPromotionSessionId().toString() + "_" + item.getSkuId().toString())
-                        .collect(Collectors.toList());
-                redisTemplate.opsForList().leftPushAll(key, collect);
-            }
+                //缓存到活动信息
+                Boolean hasKey = redisTemplate.hasKey(key);
+                //保证幂等性
+                if (!hasKey) {
+                    List<String> collect = session.getRelationEntityList().stream().map(item ->
+                            item.getPromotionSessionId().toString() + "_" + item.getSkuId().toString())
+                            .collect(Collectors.toList());
+                    redisTemplate.opsForList().leftPushAll(key, collect);
+                }
 
 
-        });
+            });
+        }
+
     }
 
     private void saveSessionSkuInfos(List<SeckillSessionsWithSkus> sessions) {
-        sessions.stream().forEach(session -> {
-            //准备hash操作
-            BoundHashOperations<String, Object, Object> ops = redisTemplate.boundHashOps(SECKILL_CACHE_PREFIX);
-            session.getRelationEntityList().stream().forEach(seckillSkuVo -> {
-                //生成随机码
-                String token = UUID.randomUUID().toString().replace("-", "");
+        if(sessions != null){
+            sessions.stream().forEach(session -> {
+                //准备hash操作
+                BoundHashOperations<String, Object, Object> ops = redisTemplate.boundHashOps(SECKILL_CACHE_PREFIX);
+                session.getRelationEntityList().stream().forEach(seckillSkuVo -> {
+                    //生成随机码
+                    String token = UUID.randomUUID().toString().replace("-", "");
 
-                if (!ops.hasKey(seckillSkuVo.getPromotionSessionId().toString() + "_" + seckillSkuVo.getSkuId().toString())) { //保证幂等性
-                    //缓存商品信息
-                    SeckillSkuRedisTo skuRedisTo = new SeckillSkuRedisTo();
-                    //1、sku的基本信息
-                    R skuInfo = productFeignService.getSkuInfo(seckillSkuVo.getSkuId());
-                    if (skuInfo.getCode() == 0) {
-                        SkuInfoVo info = skuInfo.getData("skuInfo", new TypeReference<SkuInfoVo>() {
-                        });
-                        skuRedisTo.setSkuInfo(info);
+                    if (!ops.hasKey(seckillSkuVo.getPromotionSessionId().toString() + "_" + seckillSkuVo.getSkuId().toString())) { //保证幂等性
+                        //缓存商品信息
+                        SeckillSkuRedisTo skuRedisTo = new SeckillSkuRedisTo();
+                        //1、sku的基本信息
+                        R skuInfo = productFeignService.getSkuInfo(seckillSkuVo.getSkuId());
+                        if (skuInfo.getCode() == 0) {
+                            SkuInfoVo info = skuInfo.getData("skuInfo", new TypeReference<SkuInfoVo>() {
+                            });
+                            skuRedisTo.setSkuInfo(info);
+                        }
+
+                        //2、sku的秒杀信息
+                        BeanUtils.copyProperties(seckillSkuVo, skuRedisTo);
+                        //3、设置当前商品的秒杀时间信息
+                        skuRedisTo.setStartTime(session.getStartTime().getTime());
+                        skuRedisTo.setEndTime(session.getEndTime().getTime());
+
+                        //4、设置随机码
+                        skuRedisTo.setRandomCode(token);
+
+                        Boolean hasKey = redisTemplate.hasKey(SKU_STOCK_SEMAPHORE);
+
+                        //5、使用库存作为分布式的信号量(作用是限流)
+                        RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);
+                        //商品可以秒杀的数量作为信号量
+                        semaphore.trySetPermits(seckillSkuVo.getSeckillCount());
+
+                        String s = JSON.toJSONString(skuRedisTo);
+                        ops.put(seckillSkuVo.getPromotionSessionId().toString() + "_" + seckillSkuVo.getSkuId().toString(), s);
                     }
-
-                    //2、sku的秒杀信息
-                    BeanUtils.copyProperties(seckillSkuVo, skuRedisTo);
-                    //3、设置当前商品的秒杀时间信息
-                    skuRedisTo.setStartTime(session.getStartTime().getTime());
-                    skuRedisTo.setEndTime(session.getEndTime().getTime());
-
-                    //4、设置随机码
-                    skuRedisTo.setRandomCode(token);
-
-                    Boolean hasKey = redisTemplate.hasKey(SKU_STOCK_SEMAPHORE);
-
-                    //5、使用库存作为分布式的信号量(作用是限流)
-                    RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);
-                    //商品可以秒杀的数量作为信号量
-                    semaphore.trySetPermits(seckillSkuVo.getSeckillCount());
-
-                    String s = JSON.toJSONString(skuRedisTo);
-                    ops.put(seckillSkuVo.getPromotionSessionId().toString() + "_" + seckillSkuVo.getSkuId().toString(), s);
-                }
+                });
             });
-        });
+        }
+
     }
 }

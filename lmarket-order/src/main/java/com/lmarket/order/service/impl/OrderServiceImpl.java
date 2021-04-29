@@ -358,6 +358,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         entity.setOrderSn(to.getOrderSn());
         entity.setRealAmount(multiply);
         entity.setSkuQuantity(to.getNum());
+        entity.setSkuPic(to.getSkuDefaultImg());
 
         //获取当前sku的详细信息
         R skuInfo = productFeignService.getSkuInfo(to.getSkuId());

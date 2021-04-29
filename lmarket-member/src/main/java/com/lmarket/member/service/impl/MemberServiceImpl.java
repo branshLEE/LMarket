@@ -1,5 +1,6 @@
 package com.lmarket.member.service.impl;
 
+import com.common.id.SnowFlakeGenerateIdWorker;
 import com.lmarket.member.dao.MemberLevelDao;
 import com.lmarket.member.entity.MemberLevelEntity;
 import com.lmarket.member.exception.PhoneExistException;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Map;
+import java.util.UUID;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -50,8 +53,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         entity.setLevelId(levelEntity.getId());
 
         //检查用户名喝手机号是否唯一
+
         checkPhoneUnique(vo.getPhone());
         checkUsernameUnique(vo.getUserName());
+
+        //设置memberId
+        SnowFlakeGenerateIdWorker idWorker = new SnowFlakeGenerateIdWorker();
+        Long id = Long.valueOf(idWorker.generateNextId());
+        entity.setMemberId(id);
 
         entity.setMobile(vo.getPhone());
         entity.setUsername(vo.getUserName());
@@ -137,6 +146,12 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         }else {
             //2、没有查到当前社交用户对应的记录，则注册
             MemberEntity register = new MemberEntity();
+
+            //设置memberId
+            SnowFlakeGenerateIdWorker idWorker = new SnowFlakeGenerateIdWorker();
+            Long id = Long.valueOf(idWorker.generateNextId());
+            register.setMemberId(id);
+
             register.setOauth2Userid(vo.getUser_id());
             register.setAccessToken(vo.getAccess_token());
             register.setNickname(vo.getNick_name());
