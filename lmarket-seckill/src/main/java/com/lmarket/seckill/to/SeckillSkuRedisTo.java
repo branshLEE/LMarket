@@ -33,20 +33,20 @@ public class SeckillSkuRedisTo {
     /**
      *
      */
-    private BigDecimal seckillCount;
+    private Integer seckillCount;
     /**
      * ÿ
      */
-    private BigDecimal seckillLimit;
+    private Integer seckillLimit;
     /**
      *
      */
     private Integer seckillSort;
 
-    //sku的详细信息
-    private SkuInfoVo skuInfo;
-
     //当前商品秒杀的开始时间和结束时间
     private Long startTime;
     private Long endTime;
+
+    //sku的详细信息
+    private SkuInfoVo skuInfo;
 }

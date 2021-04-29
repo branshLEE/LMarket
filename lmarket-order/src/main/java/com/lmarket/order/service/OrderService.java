@@ -1,6 +1,7 @@
 package com.lmarket.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.common.to.SeckillOrderTo;
 import com.common.utils.PageUtils;
 import com.lmarket.order.entity.OrderEntity;
 import com.lmarket.order.entity.OrderItemEntity;
@@ -45,5 +46,7 @@ public interface OrderService extends IService<OrderEntity> {
     List<OrderEntity> listOrder();
 
     String handlePayResult(PayAsyncVo vo);
+
+    void createSeckillOrder(SeckillOrderTo to);
 }
 

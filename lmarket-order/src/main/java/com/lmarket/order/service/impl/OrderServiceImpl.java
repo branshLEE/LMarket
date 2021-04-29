@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.common.exception.BizCodeEnume;
 import com.common.exception.NoStockException;
+import com.common.to.SeckillOrderTo;
 import com.common.to.mq.OrderTo;
 import com.common.utils.R;
 import com.common.vo.MemberResponseVo;
@@ -335,6 +336,41 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }
 
         return "success";
+    }
+
+    @Override
+    public void createSeckillOrder(SeckillOrderTo to) {
+
+        //保存订单信息
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderSn(to.getOrderSn());
+        orderEntity.setMemberId(to.getMemberId());
+
+        orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+
+        BigDecimal multiply = to.getSeckillPrice().multiply(new BigDecimal("" + to.getNum()));
+        orderEntity.setPayAmount(multiply);
+
+        this.save(orderEntity);
+
+        //保存订单项信息
+        OrderItemEntity entity = new OrderItemEntity();
+        entity.setOrderSn(to.getOrderSn());
+        entity.setRealAmount(multiply);
+        entity.setSkuQuantity(to.getNum());
+
+        //获取当前sku的详细信息
+        R skuInfo = productFeignService.getSkuInfo(to.getSkuId());
+        if(skuInfo.getCode() == 0){
+            OrderItemEntity data = skuInfo.getData("skuInfo", new TypeReference<OrderItemEntity>() {
+            });
+            entity.setSkuId(to.getSkuId());
+            entity.setSpuName(data.getSpuName());
+            entity.setSkuName(data.getSkuName());
+        }
+
+        orderItemService.save(entity);
+
     }
 
     /**

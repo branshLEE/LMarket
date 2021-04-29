@@ -6,7 +6,6 @@ import com.lmarket.cart.interceptor.CartInterceptor;
 import com.lmarket.cart.service.CartService;
 import com.lmarket.cart.vo.Cart;
 import com.lmarket.cart.vo.CartItem;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
