@@ -1,5 +1,9 @@
 package com.lmarket.seckill.service.impl;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -72,34 +76,43 @@ public class SeckillServiceImpl implements SeckillService {
         }
     }
 
+    public List<SeckillSkuRedisTo> BlockExceptionHandler(BlockException e){
+        log.error("getCurrentSeckillSkus被限流了。。。");
+        return null;
+    }
+
+    @SentinelResource(value = "getCurrentSeckillSkus", blockHandler = "BlockExceptionHandler")
     @Override
     public List<SeckillSkuRedisTo> getCurrentSeckillSkus() {
 
-        //1、确定当前时间属于那个秒杀场次
-        long time = new Date().getTime();
-        Set<String> keys = redisTemplate.keys(SESSION_CACHE_PREFIX + "*");
-        for (String key : keys) {
-            //"seckill:sessions:1619568000000_1619575200000"
-            String[] s = key.replace(SESSION_CACHE_PREFIX, "").split("_");
-            Long start = Long.parseLong(s[0]);
-            Long end = Long.parseLong(s[1]);
-            if (time >= start && time <= end) {
-                //2、获取该秒杀场次需要的所有商品信息
-                List<String> range = redisTemplate.opsForList().range(key, -100, 100);
-                BoundHashOperations<String, String, String> hashOps = redisTemplate.boundHashOps(SECKILL_CACHE_PREFIX);
-                List<String> list = hashOps.multiGet(range);
-                if (list != null) {
-                    List<SeckillSkuRedisTo> collect = list.stream().map(item -> {
-                        SeckillSkuRedisTo redis = JSON.parseObject(item.toString(), SeckillSkuRedisTo.class);
+        try(Entry entry = SphU.entry("seckillSkus")){
+            //1、确定当前时间属于那个秒杀场次
+            long time = new Date().getTime();
+            Set<String> keys = redisTemplate.keys(SESSION_CACHE_PREFIX + "*");
+            for (String key : keys) {
+                //"seckill:sessions:1619568000000_1619575200000"
+                String[] s = key.replace(SESSION_CACHE_PREFIX, "").split("_");
+                Long start = Long.parseLong(s[0]);
+                Long end = Long.parseLong(s[1]);
+                if (time >= start && time <= end) {
+                    //2、获取该秒杀场次需要的所有商品信息
+                    List<String> range = redisTemplate.opsForList().range(key, -100, 100);
+                    BoundHashOperations<String, String, String> hashOps = redisTemplate.boundHashOps(SECKILL_CACHE_PREFIX);
+                    List<String> list = hashOps.multiGet(range);
+                    if (list != null) {
+                        List<SeckillSkuRedisTo> collect = list.stream().map(item -> {
+                            SeckillSkuRedisTo redis = JSON.parseObject(item.toString(), SeckillSkuRedisTo.class);
 //                        redis.setRandomCode(null); 当前秒杀开始了，则会需要随机码
-                        return redis;
-                    }).collect(Collectors.toList());
-                    return collect;
+                            return redis;
+                        }).collect(Collectors.toList());
+                        return collect;
+                    }
+                    break;
                 }
-                break;
             }
+        }catch (BlockException e){
+            log.error("资源被限流， {}", e.getMessage());
         }
-
         return null;
     }
 
