@@ -188,7 +188,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return catelogJsonFromDb;
         }
         //转为指定的对象
-        TypeReference<Map<String, List<Catelog2Vo>>> typeReference = new TypeReference<>() {
+        TypeReference<Map<String, List<Catelog2Vo>>> typeReference = new TypeReference<Map<String, List<Catelog2Vo>>>() {
         };
         Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, typeReference);
         return result;
@@ -259,7 +259,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
         if (!StringUtils.isEmpty(catelogJSON)) {
             //缓存不为空，直接返回
-            TypeReference<Map<String, List<Catelog2Vo>>> typeReference = new TypeReference<>() {
+            TypeReference<Map<String, List<Catelog2Vo>>> typeReference = new TypeReference<Map<String, List<Catelog2Vo>>>() {
             };
             Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, typeReference);
             return result;

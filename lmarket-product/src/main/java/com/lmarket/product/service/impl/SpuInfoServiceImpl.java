@@ -269,7 +269,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         Map<Long, Boolean> stockMap = null;
         try{
             R r = wareFeignService.getSkusHasStock(skuIdList);
-            TypeReference<List<SkuHasStockVo>> typeReference = new TypeReference<>() {
+            TypeReference<List<SkuHasStockVo>> typeReference = new TypeReference<List<SkuHasStockVo>>() {
             };
             stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId,
                     SkuHasStockVo::getHasStock));

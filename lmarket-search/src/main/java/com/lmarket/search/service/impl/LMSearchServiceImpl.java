@@ -34,6 +34,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -208,7 +209,7 @@ public class LMSearchServiceImpl implements LMSearchService {
                 result.getAttrIds().add(Long.parseLong(s[0]));
 
                 if(r.getCode() == 0){
-                    TypeReference<AttrResponseVo> reference = new TypeReference<>() {
+                    TypeReference<AttrResponseVo> reference = new TypeReference<AttrResponseVo>() {
                     };
                     AttrResponseVo data = r.getData("attr", reference);
                     String name = data.getAttrName();
