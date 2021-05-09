@@ -2,11 +2,13 @@ package com.common.to.mq;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class OrderTo {
+public class OrderTo implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     /**
      * member_id

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.common.to.SeckillOrderTo;
 import com.common.utils.PageUtils;
 import com.lmarket.order.entity.OrderEntity;
-import com.lmarket.order.entity.OrderItemEntity;
 import com.lmarket.order.vo.*;
 
 import java.util.List;

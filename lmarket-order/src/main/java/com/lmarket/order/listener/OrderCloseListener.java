@@ -1,5 +1,6 @@
 package com.lmarket.order.listener;
 
+import com.common.to.mq.OrderTo;
 import com.lmarket.order.config.AlipayTemplate;
 import com.lmarket.order.entity.OrderEntity;
 import com.lmarket.order.service.OrderService;
@@ -8,13 +9,14 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Service
-@RabbitListener(queues = "order.release.order.queue")
+@Component
 public class OrderCloseListener {
 
     @Autowired
@@ -23,13 +25,13 @@ public class OrderCloseListener {
     @Autowired
     AlipayTemplate alipayTemplate;
 
-    @RabbitHandler
-    public void listener(OrderEntity entity, Channel channel, Message message, HttpServletRequest request) throws IOException {
+    @RabbitListener(queues = "order.release.order.queue")
+    public void listener(OrderEntity entity, Channel channel, Message message) throws IOException {
         System.out.println("收到过期的订单信息，准备关闭订单"+entity.getOrderSn());
         try{
             orderService.closeOrder(entity);
             //手动调用支付宝收单
-            alipayTemplate.closePay(request);
+//            alipayTemplate.closePay(request);
 
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }catch (Exception e){
