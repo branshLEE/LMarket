@@ -38,15 +38,6 @@ public class CouponController {
      * 列表
      */
 
-    @Value("${coupons.name}")
-    private String name;
-    @Value("${coupons.age}")
-    private Integer age;
-    @RequestMapping("/test")
-    public R test(){
-        return R.ok().put("name", name).put("age", age);
-    }
-
     @RequestMapping("/list")
     //@RequiresPermissions("coupon:coupon:list")
     public R list(@RequestParam Map<String, Object> params){
