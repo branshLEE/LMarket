@@ -11,14 +11,20 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>lmarket-ware</module>
-		<module>lmarket-product</module>
-		<module>lmarket-order</module>
-		<module>lmarket-member</module>
+		<module>lmarket-auth-server</module>
+		<module>lmarket-cart</module>
+		<module>lmarket-common</module>
 		<module>lmarket-coupon</module>
+		<module>lmarket-gateway</module>
+		<module>lmarket-member</module>
+		<module>lmarket-order</module>
+		<module>lmarket-product</module>
+		<module>lmarket-search</module>
+		<module>lmarket-seckill</module>
+		<module>lmarket-third-party</module>
+		<module>lmarket-ware</module>
 		<module>renren-fast</module>
 		<module>renren-generator</module>
-		<module>lmarket-common</module>
 	</modules>
 
 
