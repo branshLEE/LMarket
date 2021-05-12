@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: lmarket-member
-          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER
+          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:$PROJECT_VERSION
           ports:
             - containerPort: 8080
               protocol: TCP
