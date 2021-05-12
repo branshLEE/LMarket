@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-coupon
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-auth-server
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

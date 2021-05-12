@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-gateway
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

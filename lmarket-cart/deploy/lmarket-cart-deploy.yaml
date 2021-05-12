@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-cart
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

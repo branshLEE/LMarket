@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-seckill
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

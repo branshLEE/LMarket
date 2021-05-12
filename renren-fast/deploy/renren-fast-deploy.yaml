@@ -56,5 +56,4 @@ spec:
   selector:
     app: renren-fast
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

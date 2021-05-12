@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-search
   type: NodePort
-  clusterIP: None
   sessionAffinity: None

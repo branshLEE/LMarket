@@ -56,5 +56,4 @@ spec:
   selector:
     app: lmarket-order
   type: NodePort
-  clusterIP: None
   sessionAffinity: None
