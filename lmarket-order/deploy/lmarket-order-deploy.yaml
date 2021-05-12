@@ -52,7 +52,7 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 20017
+      nodePort: 30017
   selector:
     app: lmarket-order
   type: NodePort

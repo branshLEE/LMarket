@@ -52,7 +52,7 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 20029
+      nodePort: 30029
   selector:
     app: lmarket-third-party
   type: NodePort

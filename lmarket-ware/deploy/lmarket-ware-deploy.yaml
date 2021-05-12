@@ -52,7 +52,7 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 20032
+      nodePort: 30032
   selector:
     app: lmarket-ware
   type: NodePort
