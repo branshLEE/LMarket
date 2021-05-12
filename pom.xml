@@ -14,8 +14,11 @@
 	<!-- The destination file for the code coverage report has to be set to the same value
          in the parent pom and in each module pom. Then JaCoCo will add up information in
          the same report, so that, it will give the cross-module code coverage. -->
-	<sonar.jacoco.reportPaths>${PWD}/./target/jacoco.exec</sonar.jacoco.reportPaths>
-	<sonar.groovy.binaries>target/classes</sonar.groovy.binaries>
+	<properties>
+		<sonar.jacoco.reportPaths>${PWD}/./target/jacoco.exec</sonar.jacoco.reportPaths>
+		<sonar.groovy.binaries>target/classes</sonar.groovy.binaries>
+	</properties>
+
 
 	<modules>
 		<module>lmarket-auth-server</module>
