@@ -18,8 +18,8 @@ pipeline {
   }
 
   parameters {
-          string(name:'PROJECT_VERSION',defaultValue: 'v0.0-Beta',description:'')
-          string(name:'PROJECT_NAME',defaultValue: 'lmarket-gateway',description:'')
+          string(name:'PROJECT_VERSION',defaultValue: '',description:'')
+          string(name:'PROJECT_NAME',defaultValue: '',description:'')
   }
 
   stages {
