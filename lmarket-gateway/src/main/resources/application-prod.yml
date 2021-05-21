@@ -1,0 +1,123 @@
+spring:
+  application:
+    name: lmarket-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-service.lmarket:8848
+    sentinel:
+      transport:
+        dashboard: sentinel-service.lmarket:1133
+        port: 8719
+
+    # zipkin:
+    #   base-url: http://192.168.56.10:9411/
+    #   discovery-client-enabled: false
+    #   sender:
+    #     type: web
+
+    # sleuth:
+    #   sampler:
+    #     probability: 1
+    #   redis:
+    #     enabled: false
+
+
+
+
+    gateway:
+      routes:
+        #        - id: test_route
+        #          uri: https://www.baidu.com
+        #          predicates:
+        #            - Query=url,baidu
+        #
+        #        - id: qq_route
+        #          uri: https://www.qq.com
+        #          predicates:
+        #            - Query=url,qq
+
+        - id: product_route
+          uri: lb://lmarket-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: coupon_route
+          uri: lb://lmarket-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: third_party_route
+          uri: lb://lmarket-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+
+        - id: member_route
+          uri: lb://lmarket-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: ware_route
+          uri: lb://lmarket-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+        - id: lmarket_host_route
+          uri: lb://lmarket-product
+          predicates:
+            - Host=lmarket.com, item.lmarket.com
+
+        - id: lmarket_search_route
+          uri: lb://lmarket-search
+          predicates:
+            - Host=search.lmarket.com
+
+        - id: lmarket_auth_route
+          uri: lb://lmarket-auth-server
+          predicates:
+            - Host=auth.lmarket.com
+
+        - id: lmarket_cart_route
+          uri: lb://lmarket-cart
+          predicates:
+            - Host=cart.lmarket.com
+
+        - id: lmarket_order_route
+          uri: lb://lmarket-order
+          predicates:
+            - Host=order.lmarket.com
+
+        - id: lmarket_seckill_route
+          uri: lb://lmarket-seckill
+          predicates:
+            - Host=seckill.lmarket.com
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true

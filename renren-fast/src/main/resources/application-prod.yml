@@ -1,4 +1,12 @@
 spring:
+
+    application:
+        name: renren-fast
+        cloud:
+            nacos:
+                discovery:
+                    server-addr: nacos-service.lmarket:8848
+
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
