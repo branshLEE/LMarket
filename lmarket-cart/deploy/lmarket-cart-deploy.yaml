@@ -18,6 +18,7 @@ spec:
       containers:
         - name: lmarket-cart
           image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest
+          command: [ "/bin/bash", "-ce", "tail -f /dev/null" ]
           ports:
             - containerPort: 8080
               protocol: TCP
