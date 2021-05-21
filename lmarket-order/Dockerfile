@@ -1,4 +1,4 @@
-FROM java:11
+FROM java:8
 EXPOSE 8080
 
 VOLUME /tmp
