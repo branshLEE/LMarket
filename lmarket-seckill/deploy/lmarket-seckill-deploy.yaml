@@ -18,13 +18,14 @@ spec:
       containers:
         - name: lmarket-seckill
           image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest
+          command: [ "/bin/bash", "-ce", "tail -f /dev/null" ]
           ports:
             - containerPort: 8080
               protocol: TCP
           resources:
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 500m
+              memory: 1024Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
