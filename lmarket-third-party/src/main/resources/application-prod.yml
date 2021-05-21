@@ -4,7 +4,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-service.lmarket:8848
+        server-addr: nacos-service.lmarket
     alicloud:
       access-key: LTAI4GFmAuvbsrEwYpBHNdHb
       secret-key: SAMZVZhAAuv7gqYSgEWKccDe6CAXGh
@@ -19,7 +19,7 @@ spring:
         appcode: ef4552bd33044284bd7f5e550a5a515b
 
   zipkin:
-    base-url: http://zipkin-service.lmarket:9411/
+    base-url: http://zipkin-service.lmarket
     discovery-client-enabled: false
     sender:
       type: web
