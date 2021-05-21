@@ -4,10 +4,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-service.lmarket:8848
+        server-addr: nacos-service.lmarket
     sentinel:
       transport:
-        dashboard: sentinel-service.lmarket:1133
+        dashboard: sentinel-service.lmarket
         port: 8719
 
     # zipkin:
