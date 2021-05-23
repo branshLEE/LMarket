@@ -13,7 +13,7 @@ spring:
         port: 8719
 
   redis:
-    host: redis-service.lmarket
+    host: redis.lmarket
 
   thymeleaf:
     cache: false

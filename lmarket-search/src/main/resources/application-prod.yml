@@ -16,7 +16,7 @@ spring:
     cache: false
 
   redis:
-    host: redis-service.lmarket
+    host: redis.lmarket
 
   session:
     store-type: redis

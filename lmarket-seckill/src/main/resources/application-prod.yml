@@ -13,11 +13,11 @@ spring:
         port: 8719
 
   redis:
-    host: redis-service.lmarket
+    host: redis.lmarket
     port: 6379
 
   rabbitmq:
-    host: rabbitmq-management-service.lmarket
+    host: rabbitmq-management.lmarket
     port: 5672
     virtual-host: /
     listener:
