@@ -2,11 +2,11 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-service.lmarket
+        server-addr: nacos-service.lmarket:8848
 
     sentinel:
       transport:
-        dashboard: sentinel-service.lmarket
+        dashboard: sentinel-service.lmarket:1133
         port: 8719
 
   application:
@@ -24,7 +24,7 @@ spring:
 
 
   zipkin:
-    base-url: http://zipkin-service.lmarket
+    base-url: http://zipkin-service.lmarket:9411/
     discovery-client-enabled: false
     sender:
       type: web
