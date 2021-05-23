@@ -10,8 +10,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @EnableFeignClients
 @EnableDiscoveryClient
-//@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@SpringBootApplication
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class LmarketCartApplication {
 
     public static void main(String[] args) {
