@@ -7,6 +7,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.common.id.SnowFlakeGenerateIdWorker;
 import com.common.to.SeckillOrderTo;
 import com.common.to.SkuReductionTo;
 import com.common.utils.R;
@@ -183,10 +184,10 @@ public class SeckillServiceImpl implements SeckillService {
                             if (b) {
                                 //秒杀成功
                                 //快速下单
-
-                                String timeId = IdWorker.getTimeId(); //创建一个订单号
+                                SnowFlakeGenerateIdWorker timeId = new SnowFlakeGenerateIdWorker(); //用雪花算法生成订单号
+//                                String timeId = IdWorker.getTimeId(); //创建一个订单号
                                 SeckillOrderTo orderTo = new SeckillOrderTo();
-                                orderTo.setOrderSn(timeId);
+                                orderTo.setOrderSn(String.valueOf(timeId));
                                 orderTo.setMemberId(responseVo.getMemberId());
                                 orderTo.setNum(num);
                                 orderTo.setPromotionSessionId(redis.getPromotionSessionId());
@@ -202,7 +203,7 @@ public class SeckillServiceImpl implements SeckillService {
                                         orderTo);
                                 long s2 = System.currentTimeMillis();
                                 log.info("秒杀下单耗时。。。。。"+(s2-s1));
-                                return timeId;
+                                return String.valueOf(timeId);
                             } else {
                                 return null;
                             }
