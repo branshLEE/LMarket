@@ -21,7 +21,7 @@ public class MyRedissonConfig {
     RedissonClient redisson() throws IOException {
         //1.创建配置
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://192.168.56.10:6379");
+        config.useSingleServer().setAddress("redis://redis.lmarket:6379");
         //2.根据Config创建出RedissonClien实例
         RedissonClient redissonClient = Redisson.create(config);
         return redissonClient;
