@@ -39,10 +39,10 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
         return orderItemEntities;
     }
 
-    @RabbitListener(queues = {"hello-java-queue"})
-    public void receiveMsg(Message msg){
-        byte[] body = msg.getBody();
-        log.info("接收到消息。。。。内容:"+msg+"==>类型："+msg.getClass());
-    }
+//    @RabbitListener(queues = {"hello-java-queue"})
+//    public void receiveMsg(Message msg){
+//        byte[] body = msg.getBody();
+//        log.info("接收到消息。。。。内容:"+msg+"==>类型："+msg.getClass());
+//    }
 
 }
