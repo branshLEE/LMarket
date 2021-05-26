@@ -10,7 +10,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession
 @EnableFeignClients
 @EnableDiscoveryClient
-@SpringBootApplication(exclude= {DataSourceAutoConfiguration.class})
+@SpringBootApplication
 public class LmarketSearchApplication {
 
     public static void main(String[] args) {

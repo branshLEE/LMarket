@@ -23,6 +23,12 @@
             <groupId>com.lmarket</groupId>
             <artifactId>lmarket-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--		模板引擎: thymeleaf-->
