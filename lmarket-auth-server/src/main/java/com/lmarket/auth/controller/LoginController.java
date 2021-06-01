@@ -92,7 +92,7 @@ public class LoginController {
 //            model.addAttribute("errors", errors);
             redirectAttributes.addFlashAttribute("errors", errors);
             //校验出错，转发到注册页面
-            return "redirect:http://auth.lmarket.com/reg.html";
+            return "redirect:http://auth.lmarket.market/reg.html";
         }
 
 
@@ -109,13 +109,13 @@ public class LoginController {
                 if(regist.getCode() == 0){
                     //成功
 
-                    return "redirect:http://auth.lmarket.com/login.html";
+                    return "redirect:http://auth.lmarket.market/login.html";
                 }else{
                     //失败
                     Map<String, String> errors = new HashMap<>();
                     errors.put("msg", regist.getData(new TypeReference<String>(){}));
                     redirectAttributes.addFlashAttribute("errors", errors);
-                    return "redirect:http://auth.lmarket.com/reg.html";
+                    return "redirect:http://auth.lmarket.market/reg.html";
                 }
 
             }else{
@@ -123,14 +123,14 @@ public class LoginController {
                 errors.put("code", "验证码错误");
                 redirectAttributes.addFlashAttribute("errors", errors);
                 //校验出错，转发到注册页面
-                return "redirect:http://auth.lmarket.com/reg.html";
+                return "redirect:http://auth.lmarket.market/reg.html";
             }
         }else{
             Map<String, String> errors = new HashMap<>();
             errors.put("code", "验证码错误");
             redirectAttributes.addFlashAttribute("errors", errors);
             //校验出错，转发到注册页面
-            return "redirect:http://auth.lmarket.com/reg.html";
+            return "redirect:http://auth.lmarket.market/reg.html";
         }
     }
 
@@ -144,12 +144,12 @@ public class LoginController {
             MemberResponseVo data = login.getData("data", new TypeReference<MemberResponseVo>() {
             });
             session.setAttribute(AuthServerConstant.LOGIN_USER, data);
-            return "redirect:http://lmarket.com";
+            return "redirect:http://lmarket.market";
         }else{
             Map<String, String> errors = new HashMap<>();
             errors.put("msg", login.getData("msg", new TypeReference<String>(){}));
             redirectAttributes.addFlashAttribute("errors", errors);
-            return "redirect:http://auth.lmarket.com/login.html";
+            return "redirect:http://auth.lmarket.market/login.html";
         }
 
     }

@@ -18,7 +18,7 @@
     <div class="header_head_box">
         <b class="header_head_p">
             <div style="overflow: hidden">
-                <a href="http://lmarket.com" class="header_head_p_a1" style="width:73px;">
+                <a href="http://lmarket.market" class="header_head_p_a1" style="width:73px;">
                     LMarket首页
                 </a>
                 <a href="/static/search/#" class="header_head_p_a">
@@ -65,16 +65,16 @@
         </b>
         <ul>
             <li>
-                <a href="http://auth.lmarket.com/login.html">
+                <a href="http://auth.lmarket.market/login.html">
                     [[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]
                 </a>
             </li>
             <li>
-                <a th:if="${#strings.isEmpty(session.loginUser)}" href="http://auth.lmarket.com/reg.html" class="li_2">免费注册</a>
+                <a th:if="${#strings.isEmpty(session.loginUser)}" href="http://auth.lmarket.market/reg.html" class="li_2">免费注册</a>
             </li>
             <span>|</span>
             <li>
-                <a th:if="${!#strings.isEmpty(session.loginUser)}" href="http://order.lmarket.com/list.html">我的订单</a>
+                <a th:if="${!#strings.isEmpty(session.loginUser)}" href="http://order.lmarket.market/list.html">我的订单</a>
             </li>
             <span>|</span>
             <li class="header_wdjd" style="width:80px;">
@@ -402,7 +402,7 @@
 <!--搜索导航-->
 <div class="header_sous">
     <div class="logo">
-        <a href="http://lmarket.com"><img src="/static/search/image/LMarket_logo.png" alt=""></a>
+        <a href="http://lmarket.market"><img src="/static/search/image/LMarket_logo.png" alt=""></a>
     </div>
     <div class="header_form">
         <input id="keyword_input" type="text" placeholder="手机" th:value="${param.keyword}"/>
@@ -410,7 +410,7 @@
     </div>
     <div class="header_ico">
         <div class="header_gw">
-            <span><a href="http://cart.lmarket.com/cart.html">我的购物车</a></span>
+            <span><a href="http://cart.lmarket.market/cart.html">我的购物车</a></span>
             <img src="/static/search/image/settleup-@1x.png"/>
             <span>0</span>
         </div>
@@ -1198,7 +1198,7 @@
                                 <a href="/static/search/#">关注</a>
                             </div>
                             <p class="da">
-                                <a th:href="|http://item.lmarket.com/${product.skuId}.html|">
+                                <a th:href="|http://item.lmarket.market/${product.skuId}.html|">
                                     <img th:src="${product.skuImg}" class="dim">
                                 </a>
                             </p>
