@@ -8,7 +8,6 @@ spring:
     sentinel:
       transport:
         dashboard: sentinel-service.lmarket
-        port: 8719
 
     # zipkin:
     #   base-url: http://192.168.56.10:9411/
