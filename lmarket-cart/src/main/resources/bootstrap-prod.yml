@@ -1,29 +1,25 @@
 spring:
+  application:
+    name: lmarket-cart
+
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-service.lmarket
+        server-addr: nacos-service.lmarket:8848
 
     sentinel:
       transport:
         dashboard: sentinel-service.lmarket
-        port: 8719
-
-  application:
-    name: lmarket-search
-
-  thymeleaf:
-    cache: false
 
   redis:
     host: redis.lmarket
 
-  session:
-    store-type: redis
+  thymeleaf:
+    cache: false
 
 
   zipkin:
-    base-url: http://zipkin-service.lmarket
+    base-url: http://zipkin-service.lmarket:9411/
     discovery-client-enabled: false
     sender:
       type: web

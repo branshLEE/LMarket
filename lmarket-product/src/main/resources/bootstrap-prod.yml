@@ -3,7 +3,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://mysql-master.lmarket/lmarket_wms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql-master.lmarket/lmarket_pms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   cloud:
@@ -14,24 +14,31 @@ spring:
     sentinel:
       transport:
         dashboard: sentinel-service.lmarket
-        port: 8719
-
-  application:
-    name: lmarket-ware
-
-  rabbitmq:
-    host: rabbitmq-management.lmarket
-    port: 5672
-    virtual-host: /
-
-    # 手动ack消息 消息不容易丢失
-    listener:
-      simple:
-        acknowledge-mode: manual
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
+
+  thymeleaf:
+    cache: false
+
+  application:
+    name: lmarket-product
+
+  redis:
+    host: redis.lmarket
+    port: 6379
+
+  session:
+    store-type: redis
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      #key-prefix: CACHE_
+      use-key-prefix: true
+      cache-null-values: true
+
 
   zipkin:
     base-url: http://zipkin-service.lmarket
@@ -50,6 +57,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
 server:
   port: 8080

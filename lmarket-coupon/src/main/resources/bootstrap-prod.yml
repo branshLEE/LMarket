@@ -14,7 +14,6 @@ spring:
     sentinel:
       transport:
         dashboard: sentinel-service.lmarket
-        port: 8719
 
   application:
     name: lmarket-coupon

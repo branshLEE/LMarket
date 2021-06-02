@@ -1,6 +1,10 @@
 spring:
-  application:
-    name: lmarket-seckill
+
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://mysql-master.lmarket/lmarket_wms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   cloud:
     nacos:
@@ -10,32 +14,23 @@ spring:
     sentinel:
       transport:
         dashboard: sentinel-service.lmarket
-        port: 8719
 
-  redis:
-    host: redis.lmarket
-    port: 6379
+  application:
+    name: lmarket-ware
 
   rabbitmq:
     host: rabbitmq-management.lmarket
     port: 5672
     virtual-host: /
+
+    # 手动ack消息 消息不容易丢失
     listener:
-      direct:
+      simple:
         acknowledge-mode: manual
 
-  session:
-    store-type: redis
-
-  task:
-    execution:
-      pool:
-        core-size: 20
-        max-size: 50
-
-  thymeleaf:
-    cache: false
-
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
   zipkin:
     base-url: http://zipkin-service.lmarket
@@ -49,10 +44,18 @@ spring:
     redis:
       enabled: false
 
-
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
 
 server:
   port: 8080
+
+logging:
+  level:
+    com.lmarket: debug
 
 management:
   endpoints:

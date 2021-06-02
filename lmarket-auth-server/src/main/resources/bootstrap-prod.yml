@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: lmarket-cart
-
   cloud:
     nacos:
       discovery:
@@ -9,14 +6,20 @@ spring:
 
     sentinel:
       transport:
-        dashboard: sentinel-service.lmarket:1133
-        port: 8719
+        dashboard: sentinel-service.lmarket
 
-  redis:
-    host: redis.lmarket
+  application:
+    name: lmarket-auth-server
 
   thymeleaf:
     cache: false
+
+  redis:
+    host: redis.lmarket
+    port: 6379
+
+  session:
+    store-type: redis
 
 
   zipkin:
@@ -34,6 +37,10 @@ spring:
 
 server:
   port: 8080
+
+  servlet:
+    session:
+      timeout: 30m
 
 management:
   endpoints:
