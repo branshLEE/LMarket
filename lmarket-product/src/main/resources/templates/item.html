@@ -16,7 +16,7 @@
 			<!--品牌官方网站-->
 					<div class="min">
 						<ul class="header_ul_left">
-							<li class="glyphicon glyphicon-home"> <a href="http://lmarket.market" class="aa">LM首页</a></li>
+							<li class="glyphicon glyphicon-home"> <a href="http://lmarket.cn1.utools.club" class="aa">LM首页</a></li>
 							<li class="glyphicon glyphicon-map-marker"> <a href="/static/item/javascript:;">北京</a>
 								<ol id="beijing">
 									<li style="background: red;"><a href="/static/item/javascript:;" style="color: white;">北京</a></li>
@@ -58,9 +58,9 @@
 							</li>
 						</ul>
 						<ul class="header_ul_right">
-							<li style="border: 0;"><a href="http://auth.lmarket.market/login.html" class="aa">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a></li>
-							<li th:if="${#strings.isEmpty(session.loginUser)}"><a href="http://auth.lmarket.market/reg.html" style="color: red;">免费注册</a> |</li>
-							<li th:if="${!#strings.isEmpty(session.loginUser)}"><a href="http://order.lmarket.market/list.html" class="aa">我的订单 |</a></li>
+							<li style="border: 0;"><a href="http://authlmarket.cn1.utools.club/login.html" class="aa">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a></li>
+							<li th:if="${#strings.isEmpty(session.loginUser)}"><a href="http://authlmarket.cn1.utools.club/reg.html" style="color: red;">免费注册</a> |</li>
+							<li th:if="${!#strings.isEmpty(session.loginUser)}"><a href="http://orderlmarket.cn1.utools.club/list.html" class="aa">我的订单 |</a></li>
 							<li class="jingdong"><a href="/static/item/javascript:;">LMarket</a><span class="glyphicon glyphicon-menu-down">|</span>
 								<ol class="jingdong_ol">
 									<li><a href="/static/item/javascript:;">待处理订单</a></li>
@@ -252,7 +252,7 @@
 				<nav>
 				<div class="nav_min">
 					<div class="nav_top">
-						<div class="nav_top_one"><a href="http://lmarket.market"><img src="/static/item/img/LMarket_logo.png"/></a></div>
+						<div class="nav_top_one"><a href="http://lmarket.cn1.utools.club"><img src="/static/item/img/LMarket_logo.png"/></a></div>
 						<div class="nav_top_two"><input type="text"/><button>搜索</button></div>
 						<div class="nav_top_three"><a href="/static/item/../JD_Shop/One_JDshop.html">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
 							<div class="nav_top_three_1">
@@ -1304,7 +1304,7 @@
 		console.log(filterEle[0]);
 
 		//3、跳转
-		location.href = "http://item.lmarket.market/"+filterEle[0]+".html";
+		location.href = "http://itemlmarket.cn1.utools.club/"+filterEle[0]+".html";
 	});
 
 	//回显
@@ -1316,7 +1316,7 @@
 	$("#addToCart").click(function(){
 		var num = $("#numInput").val();
 		var skuId = $(this).attr("skuId");
-		location.href = "http://cart.lmarket.market/addToCart?skuId="+skuId+"&num="+num;
+		location.href = "http://cartlmarket.cn1.utools.club/addToCart?skuId="+skuId+"&num="+num;
 
 		return false;
 	});
@@ -1327,7 +1327,7 @@
 			var killId = $(this).attr("sessionid")+"_"+$(this).attr("skuid");
 			var key = $(this).attr("code");
 			var num = $("#numInput").val();
-			location.href = "http://seckill.lmarket.market/kill?killId="+killId+"&key="+key+"&num="+num;
+			location.href = "http://seckilllmarket.cn1.utools.club/kill?killId="+killId+"&key="+key+"&num="+num;
 		}else{
 			alert("秒杀请先登录");
 		}

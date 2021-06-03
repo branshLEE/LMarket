@@ -36,21 +36,21 @@ public class CartController {
     public String deleteItem(@RequestParam("skuId") Long skuId){
         cartService.deleteItem(skuId);
 
-        return "redirect:http://cart.lmarket.market/cart.html";
+        return "redirect:http://cartlmarket.cn1.utools.club/cart.html";
     }
 
     @GetMapping("/countItem")
     public String countItem(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num){
         cartService.changeItemCount(skuId, num);
 
-        return "redirect:http://cart.lmarket.market/cart.html";
+        return "redirect:http://cartlmarket.cn1.utools.club/cart.html";
     }
 
     @GetMapping("/checkItem")
     public String checkItem(@RequestParam("skuId") Long skuId, @RequestParam("check") Integer check){
         cartService.checkItem(skuId, check);
 
-        return "redirect:http://cart.lmarket.market/cart.html";
+        return "redirect:http://cartlmarket.cn1.utools.club/cart.html";
     }
 
     /**
@@ -81,7 +81,7 @@ public class CartController {
 
         cartService.addToCart(skuId, num);
         ra.addAttribute("skuId", skuId);
-        return "redirect:http://cart.lmarket.market/addToCartSuccess.html";
+        return "redirect:http://cartlmarket.cn1.utools.club/addToCartSuccess.html";
     }
 
     /**

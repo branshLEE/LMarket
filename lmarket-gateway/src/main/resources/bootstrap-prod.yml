@@ -81,32 +81,32 @@ spring:
         - id: lmarket_host_route
           uri: lb://lmarket-product
           predicates:
-            - Host=lmarket.market, item.lmarket.market
+            - Host=lmarket.cn1.utools.club, itemlmarket.cn1.utools.club
 
         - id: lmarket_search_route
           uri: lb://lmarket-search
           predicates:
-            - Host=search.lmarket.market
+            - Host=searchlmarket.cn1.utools.club
 
         - id: lmarket_auth_route
           uri: lb://lmarket-auth-server
           predicates:
-            - Host=auth.lmarket.market
+            - Host=authlmarket.cn1.utools.club
 
         - id: lmarket_cart_route
           uri: lb://lmarket-cart
           predicates:
-            - Host=cart.lmarket.market
+            - Host=cartlmarket.cn1.utools.club
 
         - id: lmarket_order_route
           uri: lb://lmarket-order
           predicates:
-            - Host=order.lmarket.market
+            - Host=orderlmarket.cn1.utools.club
 
         - id: lmarket_seckill_route
           uri: lb://lmarket-seckill
           predicates:
-            - Host=seckill.lmarket.market
+            - Host=seckilllmarket.cn1.utools.club
 
 server:
   port: 8080

@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <title>商品成功加入购物车</title>
-    <link rel="icon" href="http://cart.lmarket.market/static/index/img/LM.ico" type="image/x-icon">
-    <script type="text/javascript" src="http://cart.lmarket.market/static/cart/js/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="http://cart.lmarket.market/static/cart/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="http://cart.lmarket.market/static/cart/js/swiper.min.js"></script>
-	<script src="http://cart.lmarket.market/js/swiper.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://cart.lmarket.market/static/cart/css/swiper.min.css" />
-    <link rel="stylesheet" type="text/css" href="http://cart.lmarket.market/static/cart/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="http://cart.lmarket.market/static/cart/css/success.css" />
+    <link rel="icon" href="http://cartlmarket.cn1.utools.club/static/index/img/LM.ico" type="image/x-icon">
+    <script type="text/javascript" src="http://cartlmarket.cn1.utools.club/static/cart/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="http://cartlmarket.cn1.utools.club/static/cart/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://cartlmarket.cn1.utools.club/static/cart/js/swiper.min.js"></script>
+	<script src="http://cartlmarket.cn1.utools.club/js/swiper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://cartlmarket.cn1.utools.club/static/cart/css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="http://cartlmarket.cn1.utools.club/static/cart/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="http://cartlmarket.cn1.utools.club/static/cart/css/success.css" />
 
  </head>
 
@@ -20,15 +20,15 @@
         <div class="hd_wrap_top">
         <ul class="hd_wrap_left">
         <li class="hd_home"><i class="glyphicon glyphicon-home"></i>
-        <a href="http://lmarket.market">LMarket首页</a>
+        <a href="http://lmarket.cn1.utools.club">LMarket首页</a>
         </li>
 
         </ul>
 
         <ul class="hd_wrap_right">
         <li class="forel">
-        <a href="http://auth.lmarket.market/login.html" class="link_login">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a>&nbsp;
-    <a th:if="${#strings.isEmpty(session.loginUser)}" href="http://auth.lmarket.market/reg.html" class="link_regist">免费注册</a>
+        <a href="http://authlmarket.cn1.utools.club/login.html" class="link_login">[[${#strings.isEmpty(session.loginUser)?'你好！请登录':session.loginUser.nickname}]]</a>&nbsp;
+    <a th:if="${#strings.isEmpty(session.loginUser)}" href="http://authlmarket.cn1.utools.club/reg.html" class="link_regist">免费注册</a>
         </li>
         <li class="spacer"></li>
 
@@ -48,7 +48,7 @@
 
         <div class="nav_top">
         <div class="nav_top_one">
-        <a href="http://lmarket.market"><img src="http://cart.lmarket.market/static/cart/img/LM_logo.png"  style="height: 60px;width:180px;"  /></a>
+        <a href="http://lmarket.cn1.utools.club"><img src="http://cartlmarket.cn1.utools.club/static/cart/img/LM_logo.png"  style="height: 60px;width:180px;"  /></a>
         </div>
         <div class="nav_top_two"><input type="text" /><button>搜索</button></div>
 
@@ -68,7 +68,7 @@
         <div class="m succeed-box">
             <div th:if="${seckillOrderSn != null}" class="mc success-cont">
                 <h1>恭喜秒杀成功！订单号：[[${seckillOrderSn}]]</h1>
-                <h2>正在准备订单数据，10s以后自动跳转支付...<a th:href="${'http://order.lmarket.market/payOrder?orderSn='+seckillOrderSn}">去支付</a></h2>
+                <h2>正在准备订单数据，10s以后自动跳转支付...<a th:href="${'http://orderlmarket.cn1.utools.club/payOrder?orderSn='+seckillOrderSn}">去支付</a></h2>
 
             </div>
             <div th:if="${seckillOrderSn == null}" style="color: red">
@@ -80,6 +80,6 @@
 
     </div>
     </body>
-    <script type="text/javascript" src="http://cart.lmarket.market/static/cart/js/success.js"></script>
+    <script type="text/javascript" src="http://cartlmarket.cn1.utools.club/static/cart/js/success.js"></script>
 
 </html>

@@ -83,7 +83,7 @@ public class CartInterceptor implements HandlerInterceptor {
         UserInfoTo userInfoTo = threadLocal.get();
         if(!userInfoTo.isTempUser()){
             Cookie cookie = new Cookie(CartConstant.TEMP_USER_COOKIE_NAME, userInfoTo.getUserKey());
-            cookie.setDomain("lmarket.market");
+            cookie.setDomain("lmarket.cn1.utools.club");
             cookie.setMaxAge(CartConstant.TEMP_USER_COOKIE_TIMEOUT);
             response.addCookie(cookie);
         }

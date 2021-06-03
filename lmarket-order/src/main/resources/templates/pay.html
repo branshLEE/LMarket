@@ -10,10 +10,10 @@
 	<body>
     <div class="One_Jdbox">
       <div class="Jdbox_head">
-        <a href="http://lmarket.market"><img src="/static/order/pay/img/LM_logo.png" alt=""></a><span class="bank">收银台</span>
+        <a href="http://lmarket.cn1.utools.club"><img src="/static/order/pay/img/LM_logo.png" alt=""></a><span class="bank">收银台</span>
         <ul>
           <li><span>[[${session.loginUser==null?'':session.loginUser.nickname}]]</span> | <span>退出</span></li>
-          <li><a th:if="${!#strings.isEmpty(session.loginUser)}" href="http://order.lmarket.market/list.html">我的订单</a></li>
+          <li><a th:if="${!#strings.isEmpty(session.loginUser)}" href="http://orderlmarket.cn1.utools.club/list.html">我的订单</a></li>
           <li>支付帮助</li>
         </ul>
       </div>
@@ -102,13 +102,13 @@
           </li>
 		  <li>
             <img src="/static/order/pay/img/zhifubao.png" style="weight:auto;height:30px;" alt="">
-            <a th:href="'http://order.lmarket.market/payOrder?orderSn='+${SubmitOrderResponse.order.orderSn}">支付宝</a>
+            <a th:href="'http://orderlmarket.cn1.utools.club/payOrder?orderSn='+${SubmitOrderResponse.order.orderSn}">支付宝</a>
           </li>
         </ul>
       </div>
       <div class="Jd_foots">
         <p>
-          <span>Copyright @2004-2017 lmarket.market 版权所有</span>
+          <span>Copyright @2004-2017 lmarket.cn1.utools.club 版权所有</span>
           <span>
             <img src="/static/order/pay/img/foots.png" alt="">
           </span>

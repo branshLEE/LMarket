@@ -15,7 +15,7 @@ public class LMarketSessionConfig {
 
         DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
 
-        defaultCookieSerializer.setDomainName("lmarket.market");
+        defaultCookieSerializer.setDomainName("lmarket.cn1.utools.club");
         defaultCookieSerializer.setCookieName("LMSESSION");
 
         return defaultCookieSerializer;

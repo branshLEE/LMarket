@@ -76,9 +76,9 @@ public class OAuth2Controller {
             log.info("登录成功！");
             System.out.println("哈哈哈哈哈哈哈哈哈   "+data);
             session.setAttribute("loginUser", data);
-            return "redirect:http://lmarket.market";
+            return "redirect:http://lmarket.cn1.utools.club";
         }else{
-            return "redirect:http://auth.lmarket.market/login.html";
+            return "redirect:http://authlmarket.cn1.utools.club/login.html";
         }
 
     }
