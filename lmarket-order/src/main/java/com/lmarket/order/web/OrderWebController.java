@@ -88,12 +88,12 @@ public class OrderWebController {
                     case 3: msg += "商品库存不足";break;
                 }
                 redirectAttributes.addFlashAttribute("msg", msg);
-                return "redirect:http://orderlmarket.cn1.utools.club/toTrade";
+                return "redirect:http://order.lmarket.market/toTrade";
             }
         } catch (Exception e) {
             String message = e.getMessage();
             redirectAttributes.addFlashAttribute("msg", message);
-            return "redirect:http://orderlmarket.cn1.utools.club/toTrade";
+            return "redirect:http://order.lmarket.market/toTrade";
         }
         //下单成功，来到支付选择页
         //下单失败，回到订单确认页重新确认订单信息

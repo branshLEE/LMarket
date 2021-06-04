@@ -221,7 +221,7 @@ public class LMSearchServiceImpl implements LMSearchService {
                 //2、取消了这个面包屑以后，我们要跳转到那个地方，将请求地址的url里面的当前置空
                 //拿到所有的查询条件，去掉当前
                 String replace = replaceQueryString(param, attr, "attrs");
-                navVo.setLink("http://searchlmarket.cn1.utools.club/list.html?"+replace);
+                navVo.setLink("http://search.lmarket.market/list.html?"+replace);
 
                 return navVo;
             }).collect(Collectors.toList());
@@ -246,7 +246,7 @@ public class LMSearchServiceImpl implements LMSearchService {
                     replace = replaceQueryString(param, brandVo.getBrandId()+"", "brandId");
                 }
                 navVo.setNavValue(stringBuffer.toString());
-                navVo.setLink("http://searchlmarket.cn1.utools.club/list.html?"+replace);
+                navVo.setLink("http://search.lmarket.market/list.html?"+replace);
             }
 
             navs.add(navVo);

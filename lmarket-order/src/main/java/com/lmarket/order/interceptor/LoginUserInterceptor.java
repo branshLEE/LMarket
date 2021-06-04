@@ -33,7 +33,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         }else{
             //没登录用户，则去登录
             request.getSession().setAttribute("msg", "请先登录！");
-            response.sendRedirect("http://authlmarket.cn1.utools.club/login.html");
+            response.sendRedirect("http://auth.lmarket.market/login.html");
             return false;
         }
     }
