@@ -6,6 +6,7 @@
 ![](https://img.shields.io/badge/ci-error-red)
 ![](https://img.shields.io/badge/cd-passing-brightgreen)
 ![](https://img.shields.io/badge/k8s.nodes-3-informational)
-![](https://img.shields.io/badge/kubesphere.pods-23-informational)
+![](https://img.shields.io/badge/kubernetes.pods-23-informational)
+![](https://img.shields.io/badge/kubesphere-3.1.0-green)
 
 # [LMarket](http://lmarket.market "lmarket.market")
