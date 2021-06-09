@@ -1,1 +1,12 @@
+![](https://img.shields.io/badge/SpringBoot-2.2.5.RELEASE-green)
+![](https://img.shields.io/badge/AlibabaCloud-2.2.1.RELEASE-green)
+![](https://img.shields.io/badge/SpringCloud-Hoxton.SR3-green)
+![](https://img.shields.io/badge/java-1.8+-green)
+![](https://img.shields.io/badge/build-passing-brightgreen)
+![](https://img.shields.io/badge/ci-error-red)
+![](https://img.shields.io/badge/cd-passing-brightgreen)
+![](https://img.shields.io/badge/k8s.nodes-3-informational)
+![](https://img.shields.io/badge/kubernetes.pods-23-informational)
+![](https://img.shields.io/badge/kubesphere-3.1.0-green)
+
 # [LMarket](http://lmarket.market "lmarket.market")
