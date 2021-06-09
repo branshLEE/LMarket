@@ -1,2 +1,1 @@
-# LMarket
-[Home page](http://lmarket.market "lmarket.market")
+![LMarket](http://search.lmarket.market/static/search/image/LMarket_logo.png "lmarket.market")
