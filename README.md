@@ -1,2 +1,1 @@
-# LMarket
-[Home page](http://lmarket.market "lmarket.market")
+# [LMarket](http://lmarket.market "lmarket.market")
